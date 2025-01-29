@@ -7,20 +7,23 @@
 
 import React from 'react';
 
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import AuthNavigation from './src/navigations/authNavigation';
-
+import {Provider} from 'react-redux';
+import store from './src/redux/store/store';
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView style={styles.contianer}>
-      <AuthNavigation />
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.contianer}>
+        <AuthNavigation />
+      </SafeAreaView>
+    </Provider>
   );
 }
-const styles = {
+const styles = StyleSheet.create({
   contianer: {
     flex: 1,
   },
-};
+});
 
 export default App;

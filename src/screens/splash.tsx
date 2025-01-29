@@ -3,12 +3,6 @@ import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 
 function Splash({navigation}) {
-  const timer = useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Auth');
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [navigation]);
   return (
     <ImageBackground
       source={IMAGES.BackgroundImg}

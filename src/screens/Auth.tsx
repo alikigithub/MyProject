@@ -23,9 +23,9 @@ function AuthScreen({navigation}) {
         </Text>
         <View style={styles.logoDiv}>
           <Image source={IMAGES.GoogleImg} />
-          <View style={styles.beforeText}> </View>
+          <View style={styles.beforeText} />
           <Text style={styles.orText}>OR</Text>
-          <View style={styles.afterText}> </View>
+          <View style={styles.afterText} />
           <TouchableHighlight
             style={styles.signUpBtn}
             onPress={() => navigation.navigate('SignUp')}>

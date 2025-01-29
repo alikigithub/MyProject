@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -9,8 +9,17 @@ import {
   View,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
+import {useDispatch} from 'react-redux';
+import {loginUser} from '../redux/store/slice/authSlice';
 
 function Login() {
+  const [email, setemail] = useState<string>('');
+  const [password, setpassword] = useState<string>('');
+  const dispatch = useDispatch();
+  const loginBtn = () => {
+    dispatch(loginUser({email, password}));
+  };
+  useState();
   return (
     <View style={styles.loginContainer}>
       <View style={styles.chatbox}>
@@ -24,9 +33,9 @@ function Login() {
         <TouchableOpacity>
           <Image source={IMAGES.logoGoogle} style={styles.googleLogo} />
         </TouchableOpacity>
-        <View style={styles.beforeText}> </View>
+        <View style={styles.beforeText} />
         <Text style={styles.orText}>OR</Text>
-        <View style={styles.afterText}> </View>
+        <View style={styles.afterText} />
       </View>
       <View style={styles.form}>
         <Text style={styles.lablemail}>Your email</Text>
@@ -35,6 +44,8 @@ function Login() {
           keyboardType="email-address"
           autoComplete="email"
           style={styles.inputField}
+          value={email}
+          onChangeText={setemail}
         />
         <Text style={styles.lablePass}>Password</Text>
         <TextInput
@@ -43,11 +54,13 @@ function Login() {
           keyboardType="default"
           secureTextEntry={true}
           style={styles.inputField}
+          value={password}
+          onChangeText={setpassword}
         />
       </View>
       <View>
         <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity style={styles.loginBtn} onPress={loginBtn}>
             <Text style={styles.btnClr}>Login</Text>
           </TouchableOpacity>
         </ImageBackground>

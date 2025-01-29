@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
@@ -11,8 +12,31 @@ import {
   View,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
+import {useDispatch} from 'react-redux';
+import {signUpUser} from '../redux/store/slice/authSlice';
 
 function SignUP() {
+  const [userName, setUserName] = useState<string>('');
+  const [email, setemail] = useState<string>('');
+  const [passwordVlu, setpasswordVlu] = useState<string>('');
+  const [confrimpasswordVlu, setconfirmpasswordVlu] = useState<string>('');
+  const dispatch = useDispatch();
+  const signUpdata = async () => {
+    if (passwordVlu === confrimpasswordVlu) {
+      console.log(email, userName, passwordVlu);
+      console.log();
+      dispatch(
+        signUpUser({
+          username: userName,
+          email,
+          password: passwordVlu,
+        }),
+      );
+    } else {
+      Alert.alert('Passwords Must be Same');
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={styles.loginContainer}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -32,6 +56,8 @@ function SignUP() {
               keyboardType="default"
               autoComplete="name"
               style={styles.inputField}
+              value={userName}
+              onChangeText={setUserName}
             />
             <Text style={styles.lablemail}>Your email</Text>
             <TextInput
@@ -39,6 +65,8 @@ function SignUP() {
               keyboardType="email-address"
               autoComplete="email"
               style={styles.inputField}
+              value={email}
+              onChangeText={setemail}
             />
             <Text style={styles.lablePass}>Password</Text>
             <TextInput
@@ -47,6 +75,8 @@ function SignUP() {
               keyboardType="default"
               secureTextEntry={true}
               style={styles.inputField}
+              value={passwordVlu}
+              onChangeText={setpasswordVlu}
             />
             <Text style={styles.lablePass}>Confirm Password</Text>
             <TextInput
@@ -55,13 +85,15 @@ function SignUP() {
               keyboardType="default"
               secureTextEntry={true}
               style={styles.inputField}
+              value={confrimpasswordVlu}
+              onChangeText={setconfirmpasswordVlu}
             />
           </View>
           <View>
             <ImageBackground
               style={styles.loginBg}
               source={IMAGES.BackgroundImg}>
-              <TouchableOpacity style={styles.loginBtn}>
+              <TouchableOpacity style={styles.loginBtn} onPress={signUpdata}>
                 <Text style={styles.btnClr}>Create an account</Text>
               </TouchableOpacity>
             </ImageBackground>
