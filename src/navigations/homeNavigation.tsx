@@ -1,15 +1,15 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Contact from '../screens/contact';
-import Setting from '../screens/Setting';
 import Home from '../screens/Home';
+import SettingNavigation from './settingNavigation';
 
 const Tab = createBottomTabNavigator();
 export default function HomeNavigation() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="home"
+        name="hometab"
         component={Home}
         options={{
           title: 'Home',
@@ -25,9 +25,10 @@ export default function HomeNavigation() {
           headerShown: false,
         }}
       />
+
       <Tab.Screen
-        name="setting"
-        component={Setting}
+        name="SettingNavigation"
+        component={SettingNavigation}
         options={{
           title: 'Setting',
           headerShown: false,

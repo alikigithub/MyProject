@@ -11,6 +11,7 @@ function SearchList({users}) {
   const dispatch = useDispatch();
   const frinedlist = users.item.contact;
   const currentUser = auth().currentUser;
+  console.log(users);
 
   useEffect(() => {
     if (frinedlist && currentUser) {
@@ -37,7 +38,7 @@ function SearchList({users}) {
       <View style={styles.imgDiv}>
         <Image
           source={
-            users.item.images && users.item.images.trim() !== ''
+            users.item.profilePic.trim() !== ''
               ? {uri: users.item.profilePic}
               : IMAGES.profileIcon
           }
@@ -70,6 +71,8 @@ const styles = StyleSheet.create({
   imgDiv: {
     height: 52,
     width: 52,
+    overflow: 'hidden',
+    borderRadius: 50,
   },
   imgD: {height: 52, width: 52},
   heading: {

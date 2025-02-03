@@ -1,42 +1,50 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Image,
   ImageBackground,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import IMAGES from '../../Assets/images';
 import {useDispatch} from 'react-redux';
-import {loginUser, signInWithGoogle} from '../redux/store/slice/authSlice';
+import ButtonTemp from '../components/button';
+import {forgetPassword} from '../redux/store/slice/authSlice';
+import Loader from '../components/Loader';
 
-function Login({navigation}) {
+function ForgetPassword() {
   const [email, setemail] = useState<string>('');
-  const [password, setpassword] = useState<string>('');
+  const [loader, setloader] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const loginBtn = () => {
-    dispatch(loginUser({email, password}));
+  const Recover = async () => {
+    if (email.trim() === '') {
+      Alert.alert('Enter Email pleae');
+      setemail('');
+      return;
+    }
+    try {
+      setloader(true);
+      console.log(email);
+      await dispatch(forgetPassword({email}));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloader(false);
+      setemail('');
+    }
   };
   useState();
-  return (
+  return loader ? (
+    <Loader />
+  ) : (
     <View style={styles.loginContainer}>
       <View style={styles.chatbox}>
-        <Text style={styles.chatboxText}>Log in to Chatbox</Text>
+        <Text style={styles.chatboxText}>Forget Password</Text>
         <Text style={styles.chatboxPara}>
-          Welcome back! Sign in using your social account or email to continue
-          us
+          Forgot your password? Don’t worry, we’ll send you a magic link right
+          at your inbox!
         </Text>
-      </View>
-
-      <View style={styles.googleDiv}>
-        <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
-          <Image source={IMAGES.logoGoogle} style={styles.googleLogo} />
-        </TouchableOpacity>
-        <View style={styles.beforeText} />
-        <Text style={styles.orText}>OR</Text>
-        <View style={styles.afterText} />
       </View>
       <View style={styles.form}>
         <Text style={styles.lablemail}>Your email</Text>
@@ -48,33 +56,12 @@ function Login({navigation}) {
           value={email}
           onChangeText={setemail}
         />
-        <Text style={styles.lablePass}>Password</Text>
-        <TextInput
-          placeholder="Enter Your Password"
-          autoComplete="password"
-          keyboardType="default"
-          secureTextEntry={true}
-          style={styles.inputField}
-          value={password}
-          onChangeText={setpassword}
-        />
+        <ButtonTemp titleName="Recover Password" onpress={Recover} />
       </View>
-      <View>
-        <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
-          <TouchableOpacity style={styles.loginBtn} onPress={loginBtn}>
-            <Text style={styles.btnClr}>Login</Text>
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-      <TouchableOpacity
-        style={styles.forgetPassDiv}
-        onPress={() => navigation.navigate('forget')}>
-        <Text style={styles.forgetTx}>Forgot password?</Text>
-      </TouchableOpacity>
     </View>
   );
 }
-export default Login;
+export default ForgetPassword;
 
 const styles = StyleSheet.create({
   forgetPassDiv: {

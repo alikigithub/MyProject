@@ -73,6 +73,7 @@ function SignUP() {
               placeholder="Enter Your Password"
               autoComplete="password"
               keyboardType="default"
+              w
               secureTextEntry={true}
               style={styles.inputField}
               value={passwordVlu}

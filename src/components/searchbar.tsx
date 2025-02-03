@@ -9,7 +9,7 @@ import {filterData} from '../types/type';
 import Loader from './Loader';
 import auth from '@react-native-firebase/auth';
 
-function Searchbar({setsearch}) {
+function Searchbar({navigation}) {
   const [searchdata, setsearchdata] = useState<string>('');
   const [filterdata, setfilterdata] = useState<filterData>();
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ function Searchbar({setsearch}) {
   const currentUser = auth().currentUser;
   const closeSearch = () => {
     dispatch(chatUsers(currentUser?.uid));
-    setsearch(false);
+    navigation.navigate('Home');
   };
   const handletext = (text: string) => {
     setsearchdata(text);

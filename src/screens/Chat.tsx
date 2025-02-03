@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Alert,
   FlatList,
 } from 'react-native';
 import IMAGES from '../../Assets/images';

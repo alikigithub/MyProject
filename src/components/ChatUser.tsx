@@ -7,7 +7,7 @@ import {chatuser} from '../types/type';
 import auth from '@react-native-firebase/auth';
 
 export default function ChatUsers({items, navigation}) {
-  console.log(items.item);
+  // console.log(items.item.profilePic);
 
   const openChat = () => {
     const currentId = auth().currentUser?.uid;
@@ -24,18 +24,23 @@ export default function ChatUsers({items, navigation}) {
   return (
     <TouchableOpacity onPress={openChat}>
       <View style={styles.subhome}>
-        <View style={styles.imgDiv}>
+        <View
+          style={
+            items.item?.profilePic.trim() === ''
+              ? styles.imgDiv
+              : styles.imgStyle
+          }>
           <Image
             style={styles.profilePic}
             source={
-              items.item.profilePic.trim() === ''
+              items.item?.profilePic.trim() === ''
                 ? IMAGES.profileIcon
-                : {uri: items.item.profilePic}
+                : {uri: items.item?.profilePic}
             }
           />
         </View>
         <View style={styles.chatData}>
-          <Text style={styles.userName}>{items.item.UserName}</Text>
+          <Text style={styles.userName}>{items.item?.UserName}</Text>
           <Text>Have a good Day</Text>
         </View>
         {/* <View style={styles.time}>
@@ -47,6 +52,13 @@ export default function ChatUsers({items, navigation}) {
 }
 
 const styles = StyleSheet.create({
+  imgStyle: {
+    marginTop: 10,
+    height: 55,
+    width: 55,
+    borderRadius: 50,
+    overflow: 'hidden',
+  },
   subhome: {
     width: '90%',
     marginTop: 32,

@@ -18,12 +18,17 @@ import Loader from '../components/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function Home({navigation}) {
-  const [search, setsearch] = useState<Boolean>(false);
   const currentUser = auth().currentUser;
   const dispatch = useDispatch();
   const listofUsers = useSelector(state => state.authSlice.addUsers);
   const loading = useSelector(state => state.authSlice.loading);
+  const profile = useSelector(state => state.authSlice.profilePic);
+  console.log(profile);
 
+  // const updatedListOfUsers = listofUsers.map(user => ({
+  //   ...user,
+  //   profilePic: user.profilePic || '', // Ensure that profilePic is always a string
+  // }));
   console.log(listofUsers);
   console.log(loading);
   useFocusEffect(
@@ -33,15 +38,6 @@ export default function Home({navigation}) {
       }
     }, [dispatch, currentUser?.uid]),
   );
-  if (search) {
-    return <Searchbar setsearch={setsearch} />;
-  }
-  const signOut = async () => {
-    dispatch(resetState());
-    await auth()
-      .signOut()
-      .catch(error => console.error('Error signing out:', error));
-  };
 
   return (
     <ImageBackground
@@ -50,22 +46,30 @@ export default function Home({navigation}) {
       resizeMode="cover">
       <View style={styles.parentView}>
         <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => setsearch(true)}>
+          <TouchableOpacity onPress={() => navigation.navigate('searchBar')}>
             <View style={styles.icoNiMG}>
               <Image source={IMAGES.searchIcon} />
             </View>
           </TouchableOpacity>
 
           <Text style={styles.headingTxt}>Home</Text>
-          <Image style={styles.profilePic} source={IMAGES.profileIcon} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('SettingNavigation')}
+            style={
+              profile?.trim() !== '' ? styles.imgStyle : styles.profilePic
+            }>
+            <Image
+              source={
+                profile?.trim() !== '' ? {uri: profile} : IMAGES.profileIcon
+              }
+              style={styles.profilePic}
+            />
+          </TouchableOpacity>
         </View>
         {loading ? (
           <Loader />
         ) : (
           <View style={styles.homeMain}>
-            <TouchableOpacity style={styles.logout} onPress={signOut}>
-              <Text style={styles.logtxt}>LOG</Text>
-            </TouchableOpacity>
             <View style={styles.subHome}>
               <FlatList
                 data={listofUsers}
@@ -83,6 +87,14 @@ export default function Home({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  profiledefault: {height: 60, width: 60},
+  imgStyle: {
+    marginTop: 10,
+    height: 40,
+    width: 40,
+    borderRadius: 50,
+    overflow: 'hidden',
+  },
   subHome: {
     width: '90%',
     flexDirection: 'row',

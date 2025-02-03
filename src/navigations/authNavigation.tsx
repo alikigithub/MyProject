@@ -9,6 +9,10 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import Login from '../screens/login';
 import HomeNavigation from './homeNavigation';
 import ChatScreen from '../screens/Chat';
+import ForgetPassword from '../screens/ForgetPassword';
+import Searchbar from '../components/searchbar';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
 const Stack = createNativeStackNavigator();
 function AuthNavigation() {
   const [user, setuser] = useState<FirebaseAuthTypes.User | null>(null);
@@ -22,7 +26,12 @@ function AuthNavigation() {
       }, 3000);
     });
   });
-
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '444947491391-9t7o8o77oj7tqdkior1hpq1irekt9270.apps.googleusercontent.com',
+    });
+  });
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -51,6 +60,13 @@ function AuthNavigation() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="searchBar"
+              component={Searchbar}
+              options={{
+                headerShown: false,
+              }}
+            />
           </>
         ) : (
           <>
@@ -73,6 +89,15 @@ function AuthNavigation() {
             <Stack.Screen
               name="login"
               component={Login}
+              options={{
+                title: '',
+                header: CustomHeader,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="forget"
+              component={ForgetPassword}
               options={{
                 title: '',
                 header: CustomHeader,

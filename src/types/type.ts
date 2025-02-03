@@ -6,6 +6,7 @@ export type signUp = {
   userid: string;
   contacts: string[];
   profilePic: string;
+  status: string;
   searchUser: userdata[];
   addUsers: userdata[];
   searchLoading: boolean;
