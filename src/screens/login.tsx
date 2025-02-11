@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
+  Alert,
   Image,
   ImageBackground,
   StyleSheet,
@@ -9,74 +10,132 @@ import {
   View,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
-import {useDispatch} from 'react-redux';
 import {loginUser, signInWithGoogle} from '../redux/store/slice/authSlice';
+import useLoginValidation from '../cutomHooks/useLoginValidation';
+import {ScrollView} from 'react-native-gesture-handler';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useAppDispatch, useAppSelector} from '../cutomHooks/useRedux';
+import {Dimensions} from 'react-native';
 
-function Login({navigation}) {
-  const [email, setemail] = useState<string>('');
-  const [password, setpassword] = useState<string>('');
-  const dispatch = useDispatch();
+type RootStackParamList = {
+  Login: undefined;
+  forget: undefined;
+};
+const {height} = Dimensions.get('window');
+const adjheight = height - 30;
+
+type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+function Login({navigation}: LoginProps) {
+  const {
+    email,
+    setemail,
+    password,
+    setpassword,
+    emailError,
+    passworError,
+    validinput,
+  } = useLoginValidation();
+  const dispatch = useAppDispatch();
   const loginBtn = () => {
-    dispatch(loginUser({email, password}));
+    if (validinput()) {
+      dispatch(loginUser({email, password}));
+    }
   };
-  useState();
-  return (
-    <View style={styles.loginContainer}>
-      <View style={styles.chatbox}>
-        <Text style={styles.chatboxText}>Log in to Chatbox</Text>
-        <Text style={styles.chatboxPara}>
-          Welcome back! Sign in using your social account or email to continue
-          us
-        </Text>
-      </View>
+  const loginerror = useAppSelector(state => state.authSlice.loginError);
+  if (loginerror.trim() !== '') {
+    Alert.alert('Email Does not Exists');
+  }
 
-      <View style={styles.googleDiv}>
-        <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
-          <Image source={IMAGES.logoGoogle} style={styles.googleLogo} />
-        </TouchableOpacity>
-        <View style={styles.beforeText} />
-        <Text style={styles.orText}>OR</Text>
-        <View style={styles.afterText} />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.lablemail}>Your email</Text>
-        <TextInput
-          placeholder="Enter Your Email"
-          keyboardType="email-address"
-          autoComplete="email"
-          style={styles.inputField}
-          value={email}
-          onChangeText={setemail}
-        />
-        <Text style={styles.lablePass}>Password</Text>
-        <TextInput
-          placeholder="Enter Your Password"
-          autoComplete="password"
-          keyboardType="default"
-          secureTextEntry={true}
-          style={styles.inputField}
-          value={password}
-          onChangeText={setpassword}
-        />
-      </View>
-      <View>
-        <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
-          <TouchableOpacity style={styles.loginBtn} onPress={loginBtn}>
-            <Text style={styles.btnClr}>Login</Text>
+  return (
+    <ScrollView>
+      <View style={styles.loginContainer}>
+        <View style={styles.chatbox}>
+          <Text style={styles.chatboxText}>Log in to Chatbox</Text>
+          <Text style={styles.chatboxPara}>
+            Welcome back! Sign in using your social account or email to continue
+            us
+          </Text>
+        </View>
+
+        <View style={styles.googleDiv}>
+          <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
+            <Image source={IMAGES.logoGoogle} style={styles.googleLogo} />
           </TouchableOpacity>
-        </ImageBackground>
+        </View>
+        <View style={styles.ordiv}>
+          <View style={styles.beforeText} />
+          <Text style={styles.orText}>OR</Text>
+          <View style={styles.afterText} />
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.lablemail}>Your email</Text>
+          <TextInput
+            placeholder="Enter Your Email"
+            keyboardType="email-address"
+            autoComplete="email"
+            style={styles.inputField}
+            value={email}
+            onChangeText={setemail}
+          />
+          {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+          <Text style={styles.lablePass}>Password</Text>
+          <TextInput
+            placeholder="Enter Your Password"
+            autoComplete="password"
+            keyboardType="default"
+            secureTextEntry={true}
+            style={styles.inputField}
+            value={password}
+            onChangeText={setpassword}
+          />
+          {passworError ? (
+            <Text style={styles.error}>{passworError}</Text>
+          ) : null}
+        </View>
+        <View style={styles.loginBgParent}>
+          <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
+            <TouchableOpacity style={styles.loginBtn} onPress={loginBtn}>
+              <Text style={styles.btnClr}>Login</Text>
+            </TouchableOpacity>
+          </ImageBackground>
+          <TouchableOpacity
+            style={styles.forgetPassDiv}
+            onPress={() => navigation.navigate('forget')}>
+            <Text style={styles.forgetTx}>Forgot password?</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <TouchableOpacity
-        style={styles.forgetPassDiv}
-        onPress={() => navigation.navigate('forget')}>
-        <Text style={styles.forgetTx}>Forgot password?</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 export default Login;
 
 const styles = StyleSheet.create({
+  loginBgParent: {
+    position: 'absolute',
+    width: '100%',
+    bottom: '2%',
+  },
+  forgetDivParent: {
+    width: '100%',
+    height: 200,
+    position: 'relative',
+    borderWidth: 1,
+  },
+  ordiv: {
+    width: '100%',
+    height: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 40,
+  },
+  error: {
+    color: 'red',
+    width: '100%',
+  },
   forgetPassDiv: {
     marginTop: 15,
     width: '100%',
@@ -132,9 +191,8 @@ const styles = StyleSheet.create({
     color: 'rgba(61, 74, 122, 1)',
   },
   googleDiv: {
-    height: '20%',
+    height: 120,
     width: '100%',
-    position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -142,23 +200,16 @@ const styles = StyleSheet.create({
     width: 122,
     height: 1,
     backgroundColor: 'rgba(205, 209, 208, 1)',
-    position: 'absolute',
-    top: '78%',
-    right: '3%',
   },
   beforeText: {
     width: 122,
     height: 1,
     backgroundColor: 'rgba(205, 209, 208, 1)',
-    position: 'absolute',
-    top: '78%',
-    left: '3%',
   },
   orText: {
     fontSize: 14,
     color: '#rgba(121, 124, 123, 1)',
     fontWeight: 900,
-    marginTop: 30,
   },
   googleLogo: {
     width: 58,
@@ -166,9 +217,9 @@ const styles = StyleSheet.create({
   },
   chatbox: {
     width: '100%',
-    height: '15%',
+    height: 100,
     alignItems: 'center',
-    marginTop: 90,
+    marginTop: 20,
   },
   chatboxPara: {
     fontSize: 18,
@@ -185,6 +236,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     padding: 24,
     flex: 1,
+    height: adjheight,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backImg: {
     width: 24,

@@ -4,12 +4,23 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
 import React from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useAppDispatch} from '../cutomHooks/useRedux';
+import {signInWithGoogle} from '../redux/store/slice/authSlice';
 
-function AuthScreen({navigation}) {
+type AuthScreenProps = NativeStackScreenProps<{
+  SignUp: undefined;
+  login: undefined;
+}>;
+
+function AuthScreen({navigation}: AuthScreenProps) {
+  const dispatch = useAppDispatch();
+
   return (
     <ImageBackground
       source={IMAGES.BackgroundImg}
@@ -22,7 +33,9 @@ function AuthScreen({navigation}) {
           family.
         </Text>
         <View style={styles.logoDiv}>
-          <Image source={IMAGES.GoogleImg} />
+          <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
+            <Image source={IMAGES.GoogleImg} />
+          </TouchableOpacity>
           <View style={styles.beforeText} />
           <Text style={styles.orText}>OR</Text>
           <View style={styles.afterText} />
@@ -41,6 +54,7 @@ function AuthScreen({navigation}) {
     </ImageBackground>
   );
 }
+
 const styles = StyleSheet.create({
   background: {flex: 1},
   viewDiv: {
@@ -51,13 +65,13 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 68,
-    fontWeight: 400,
+    fontWeight: '400',
     color: '#FFFFFF',
   },
   para: {
     fontSize: 16,
-    fontWeight: 400,
-    color: '#rgba(255, 255, 255, 0.5)',
+    fontWeight: '400',
+    color: 'rgba(255, 255, 255, 0.5)',
     marginTop: 39,
   },
   logoDiv: {
@@ -66,14 +80,10 @@ const styles = StyleSheet.create({
     marginTop: 39,
     position: 'relative',
   },
-  googleLogo: {
-    width: 48,
-    height: 48,
-  },
   orText: {
     fontSize: 14,
-    color: '#ffff',
-    fontWeight: 900,
+    color: '#FFFFFF',
+    fontWeight: '900',
     marginTop: 30,
   },
   beforeText: {
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
   login: {
     marginTop: 39,
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: '400',
     color: 'rgba(255, 255, 255, 1)',
   },
   loginLink: {
@@ -116,4 +126,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 export default AuthScreen;

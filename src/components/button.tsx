@@ -8,7 +8,12 @@ import {
 import IMAGES from '../../Assets/images';
 import {Text} from '@react-navigation/elements';
 
-function ButtonTemp({titleName, onpress}) {
+interface ButtonTempProps {
+  titleName: string;
+  onpress: () => void;
+}
+
+function ButtonTemp({titleName, onpress}: ButtonTempProps) {
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
@@ -20,10 +25,14 @@ function ButtonTemp({titleName, onpress}) {
   );
 }
 const styles = StyleSheet.create({
-  container: {width: '92%', height: 48, borderRadius: 15, overflow: 'hidden'},
+  container: {
+    width: '92%',
+    height: 48,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
   loginBg: {
     width: '100%',
-    // height: '100%',
   },
   loginBtn: {
     width: '100%',

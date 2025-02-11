@@ -1,22 +1,17 @@
 import React, {useState} from 'react';
-import {
-  Alert,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import {useDispatch} from 'react-redux';
-import ButtonTemp from '../components/button';
+import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
+import ButtonTemp from '../components/Button';
 import {forgetPassword} from '../redux/store/slice/authSlice';
 import Loader from '../components/Loader';
-
+import {useAppDispatch} from '../cutomHooks/useRedux';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Dimensions} from 'react-native';
+const {height} = Dimensions.get('window');
+const adjheight = height - 30;
 function ForgetPassword() {
   const [email, setemail] = useState<string>('');
   const [loader, setloader] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const Recover = async () => {
     if (email.trim() === '') {
       Alert.alert('Enter Email pleae');
@@ -26,7 +21,7 @@ function ForgetPassword() {
     try {
       setloader(true);
       console.log(email);
-      await dispatch(forgetPassword({email}));
+      await dispatch(forgetPassword(email));
     } catch (error) {
       console.log(error);
     } finally {
@@ -38,36 +33,49 @@ function ForgetPassword() {
   return loader ? (
     <Loader />
   ) : (
-    <View style={styles.loginContainer}>
-      <View style={styles.chatbox}>
-        <Text style={styles.chatboxText}>Forget Password</Text>
-        <Text style={styles.chatboxPara}>
-          Forgot your password? Don’t worry, we’ll send you a magic link right
-          at your inbox!
-        </Text>
+    <ScrollView>
+      <View style={styles.loginContainer}>
+        <View style={styles.chatbox}>
+          <Text style={styles.chatboxText}>Forget Password</Text>
+          <Text style={styles.chatboxPara}>
+            Forgot your password? Don’t worry, we’ll send you a magic link right
+            at your inbox!
+          </Text>
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.lablemail}>Your email</Text>
+          <TextInput
+            placeholder="Enter Your Email"
+            keyboardType="email-address"
+            autoComplete="email"
+            style={styles.inputField}
+            value={email}
+            onChangeText={setemail}
+          />
+        </View>
+        <View style={styles.forgetPassDiv}>
+          <ButtonTemp titleName="Recover Password" onpress={Recover} />
+        </View>
       </View>
-      <View style={styles.form}>
-        <Text style={styles.lablemail}>Your email</Text>
-        <TextInput
-          placeholder="Enter Your Email"
-          keyboardType="email-address"
-          autoComplete="email"
-          style={styles.inputField}
-          value={email}
-          onChangeText={setemail}
-        />
-        <ButtonTemp titleName="Recover Password" onpress={Recover} />
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 export default ForgetPassword;
 
 const styles = StyleSheet.create({
+  forgetPassbtnDiv: {
+    width: '100%',
+    height: 200,
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'flex-end',
+  },
   forgetPassDiv: {
     marginTop: 15,
     width: '100%',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: '2%',
   },
   forgetTx: {
     color: 'rgba(61, 74, 122, 1)',
@@ -93,9 +101,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '100%',
-    height: '38%',
-
-    marginTop: '2%',
+    height: 200,
   },
   inputField: {
     borderBottomWidth: 1,
@@ -118,42 +124,10 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     color: 'rgba(61, 74, 122, 1)',
   },
-  googleDiv: {
-    height: '20%',
-    width: '100%',
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  afterText: {
-    width: 122,
-    height: 1,
-    backgroundColor: 'rgba(205, 209, 208, 1)',
-    position: 'absolute',
-    top: '78%',
-    right: '3%',
-  },
-  beforeText: {
-    width: 122,
-    height: 1,
-    backgroundColor: 'rgba(205, 209, 208, 1)',
-    position: 'absolute',
-    top: '78%',
-    left: '3%',
-  },
-  orText: {
-    fontSize: 14,
-    color: '#rgba(121, 124, 123, 1)',
-    fontWeight: 900,
-    marginTop: 30,
-  },
-  googleLogo: {
-    width: 58,
-    height: 58,
-  },
+
   chatbox: {
     width: '100%',
-    height: '15%',
+    height: 125,
     alignItems: 'center',
     marginTop: 90,
   },
@@ -172,6 +146,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     padding: 24,
     flex: 1,
+    height: adjheight,
+    alignItems: 'center',
   },
   backImg: {
     width: 24,

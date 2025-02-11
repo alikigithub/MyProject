@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
-import IMAGES from '../../Assets/images'; // Replace with your actual path to images
+import IMAGES from '../../Assets/images';
 
 const AddUserButton = ({onPress}) => {
   return (

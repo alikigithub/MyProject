@@ -10,136 +10,179 @@ import {
 } from 'react-native';
 import IMAGES from '../../Assets/images';
 import SendButton from '../components/SendButton';
-import {useDispatch} from 'react-redux';
 import {sendMessage} from '../redux/store/slice/authSlice';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import ChatsData from '../components/ChatsData';
-function ChatScreen({route, navigation}) {
-  const [message, setmessage] = useState('');
-  const [messagesData, setmessagesData] = useState([]);
+import {useAppDispatch} from '../cutomHooks/useRedux';
+
+function ChatScreen({route, navigation}: any) {
+  const [message, setMessage] = useState('');
+  const [messagesData, setMessagesData] = useState<any>([]);
   const {user} = route.params;
-  console.log(user.otherUserName);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
-    const fetchData = async () => {
-      try {
-        const useRef = firestore()
-          .collection('Chat')
-          .doc(user.chatId)
-          .collection('messages')
-          .orderBy('createdAt', 'desc');
+    const chatRef = firestore()
+      .collection('Chat')
+      .doc(user.chatId)
+      .collection('messages')
+      .orderBy('createdAt', 'desc');
 
-        useRef.onSnapshot(snapshot => {
-          if (!snapshot.empty) {
-            const fetchMesages = snapshot.docs.map(doc => {
-              return {
-                id: doc.id,
-                ...doc.data(),
-              };
-            });
-            setmessagesData(fetchMesages);
-          } else {
-            return [];
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching messages:', error);
+    const unsubscribe = chatRef.onSnapshot(snapshot => {
+      if (!snapshot.empty) {
+        const fetchedMessages = snapshot.docs.map(doc => ({
+          id: doc.id,
+          text: doc.data().text || '',
+          sender: doc.data().sender || '',
+          createdAt: doc.data().createdAt || new Date(),
+          ...doc.data(),
+        }));
+        setMessagesData(fetchedMessages);
+      } else {
+        setMessagesData([]);
       }
-    };
-    fetchData();
-  }, []);
-  console.log(message);
+    });
+
+    return () => unsubscribe();
+  }, [user.chatId]);
+
   const messageSend = () => {
-    if (message.trim() === '') return;
-    else {
-      dispatch(
-        sendMessage({
-          senderID: auth().currentUser.uid,
-          ReceiverID: user.otherUserID,
-          textMsg: message,
-          combineID: user.chatId,
-        }),
-      );
-      setmessage('');
+    if (!message.trim()) {
+      return;
     }
+
+    const currentUser = auth().currentUser;
+    if (!currentUser?.uid) {
+      return;
+    }
+
+    dispatch(
+      sendMessage({
+        senderID: currentUser.uid,
+        ReceiverID: user.otherUserID,
+        textMsg: message.trim(),
+        combineID: user.chatId,
+      }),
+    );
+    setMessage('');
   };
+
   return (
     <View style={styles.mainChat}>
       <View style={styles.chatHeader}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Image source={IMAGES.backImg} style={styles.backImg} />
-        </TouchableOpacity>
-        <Text style={styles.userName}>{user.otherUserName}</Text>
+        <View style={styles.chatHeaderView}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <Image source={IMAGES.backImg} style={styles.backImg} />
+          </TouchableOpacity>
+          <View style={styles.userNameContainer}>
+            <Image
+              style={styles.profilePic}
+              source={
+                user.profile.trim() !== ''
+                  ? {uri: user.profile}
+                  : require('../../Assets/images/profile.png')
+              }
+            />
+            <Text style={styles.userName}>{user.otherUserName}</Text>
+          </View>
+        </View>
       </View>
+
       <View style={styles.chatView}>
         <FlatList
           data={messagesData}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id || Math.random().toString()}
           renderItem={({item, index}) => (
             <ChatsData
-              items={item}
+              items={{
+                ...item,
+                text: item.text || '',
+                sender: item.sender || '',
+                createdAt: item.createdAt || new Date(),
+              }}
               userName={user.otherUserName}
               messages={messagesData}
               index={index}
+              profile={user.profile}
             />
           )}
           inverted
         />
       </View>
+
       <View style={styles.bottom}>
         <TextInput
           style={styles.inputField}
-          placeholder="write Your Message"
+          placeholder="Write your message..."
           value={message}
-          onChangeText={setmessage}
+          onChangeText={setMessage}
         />
         <SendButton onpress={messageSend} />
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
+  profilePic: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  userNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  chatHeaderView: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    height: 50,
+  },
   inputField: {
     height: 50,
     width: '80%',
     backgroundColor: '#F3F6F6',
     borderRadius: 10,
+    paddingLeft: 10,
   },
   bottom: {
-    height: '10%',
+    height: 55,
     width: '100%',
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    paddingHorizontal: 10,
   },
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   mainChat: {
-    width: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   chatHeader: {
-    width: '90%',
-    height: '6%',
+    width: '100%',
+    height: 60,
+    justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
+    backgroundColor: '#F3F6F6',
+    elevation: 2,
   },
-
   backImg: {
     width: 30,
     height: 25,
   },
   chatView: {
-    height: '84%',
-    borderWidth: 1,
+    flex: 1,
     width: '100%',
+    backgroundColor: '#F3F6F6',
   },
 });
 

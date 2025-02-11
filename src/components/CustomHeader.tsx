@@ -2,7 +2,9 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 
-function CustomHeader({navigation}) {
+import {NavigationProp} from '@react-navigation/native';
+
+function CustomHeader({navigation}: {navigation: NavigationProp<any>}) {
   return (
     <View style={styles.data}>
       <TouchableOpacity onPress={() => navigation.navigate('Auth')}>

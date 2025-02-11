@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React from 'react';
 import IMAGES from '../../Assets/images';
 import {
   Image,
@@ -8,28 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
-import {Button} from '@react-navigation/elements';
-import SendButton from '../components/SendButton';
-import ButtonTemp from '../components/button';
-import {resetState} from '../redux/store/slice/authSlice';
+import ButtonTemp from '../components/Button';
+import {useAppSelector} from '../cutomHooks/useRedux';
+import useLogout from '../cutomHooks/useLogout';
 
-export default function Setting({navigation}) {
-  // const [profile, setprofile] = useState<string>();
-  const currentID = auth().currentUser?.uid;
+export default function Setting({navigation}: any) {
+  const UserName: string = useAppSelector(state => state.authSlice.username);
+  const profile: string = useAppSelector(state => state.authSlice.profilePic);
+  const status: string = useAppSelector(state => state.authSlice.status);
 
-  const UserName: string = useSelector(state => state.authSlice.username);
-  const profile: string = useSelector(state => state.authSlice.profilePic);
-  const status: string = useSelector(state => state.authSlice.status);
-  console.log(UserName);
-  const dispatch = useDispatch();
-  const signOut = async () => {
-    dispatch(resetState());
-    await auth()
-      .signOut()
-      .catch(error => console.error('Error signing out:', error));
-  };
+  const {signOut} = useLogout();
   return (
     <ImageBackground
       source={IMAGES.BackgroundImg}
@@ -100,8 +88,9 @@ export default function Setting({navigation}) {
                 <Text style={styles.iconText}>Invite a friend</Text>
               </View>
             </View>
-            <View></View>
-            <ButtonTemp titleName="signout" onpress={signOut} />
+            <View style={styles.endBtn}>
+              <ButtonTemp titleName="signout" onpress={signOut} />
+            </View>
           </View>
         </View>
       </View>
@@ -110,6 +99,12 @@ export default function Setting({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  endBtn: {
+    width: '100%',
+    height: '36%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   imgStyle: {
     marginTop: 10,
     height: 70,
@@ -190,7 +185,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headingTxt: {
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: 'bold',
     color: 'white',
   },
   searchText: {
@@ -198,12 +194,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   homeMain: {
+    flex: 1,
     width: '100%',
-    height: '85%',
     backgroundColor: 'white',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+    paddingVertical: 10,
     alignItems: 'center',
-    borderWidth: 1,
   },
 });

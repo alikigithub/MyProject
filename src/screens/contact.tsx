@@ -1,14 +1,31 @@
-import React, {useLayoutEffect} from 'react';
+import React from 'react';
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import IMAGES from '../../Assets/images';
-import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
-import ContactListData from '../components/ContactListData';
-import ChatUsers from '../components/ChatUser';
+import ChatUsersContacts from '../components/ChatUsersContact';
+import { useAppSelector } from '../cutomHooks/useRedux';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-// Utility function to group users by the first letter of their name
-const groupUsersByLetter = users => {
-  return users.reduce((groups, user) => {
-    const firstLetter = user.UserName[0].toUpperCase();
+type RootStackParamList = {
+  Contact: undefined;
+  Chat: { userId: string };
+};
+
+type ContactProps = NativeStackScreenProps<RootStackParamList, 'Contact'>;
+
+type User = {
+  id: string;
+  UserName: string;
+};
+
+const groupUsersByLetter = (users: User[]) => {
+  return users.reduce<Record<string, User[]>>((groups, user) => {
+    const firstLetter = user.UserName[0]?.toUpperCase() || '#';
     if (!groups[firstLetter]) {
       groups[firstLetter] = [];
     }
@@ -17,11 +34,9 @@ const groupUsersByLetter = users => {
   }, {});
 };
 
-export default function Contact({navigation}) {
-  const listofUsers = useSelector(state => state.authSlice.addUsers);
-
-  const groupedUsers = groupUsersByLetter(listofUsers);
-
+export default function Contact({ navigation }: ContactProps) {
+  const listOfUsers = useAppSelector(state => state.authSlice.addUsers);
+  const groupedUsers = groupUsersByLetter(listOfUsers);
   const sections = Object.keys(groupedUsers).sort();
 
   return (
@@ -31,20 +46,23 @@ export default function Contact({navigation}) {
       resizeMode="cover">
       <View style={styles.parentView}>
         <View style={styles.topBar}>
-          <Text style={styles.headingTxt}>Contact</Text>
+          <Text style={styles.headingTxt}>Contacts</Text>
         </View>
         <View style={styles.homeMain}>
           <FlatList
-            data={sections} // Render the section headers (A, B, C, etc.)
+            data={sections}
             keyExtractor={item => item}
-            renderItem={({item: letter}) => (
-              <View>
+            contentContainerStyle={styles.flatListContainer}
+            removeClippedSubviews
+            renderItem={({ item: letter }) => (
+              <View style={styles.section}>
                 <Text style={styles.letterHeader}>{letter}</Text>
                 <FlatList
-                  data={groupedUsers[letter]} // Render users under each letter
+                  data={groupedUsers[letter]}
                   keyExtractor={user => user.id}
-                  renderItem={({item}) => (
-                    <ChatUsers items={{item}} navigation={navigation} />
+                  removeClippedSubviews
+                  renderItem={({ item }) => (
+                    <ChatUsersContacts items={{ item }} navigation={navigation} />
                   )}
                 />
               </View>
@@ -65,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topBar: {
-    height: '15%',
+    height: '12%',
     width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -73,23 +91,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headingTxt: {
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: 'bold',
     color: 'white',
   },
   homeMain: {
+    flex: 1,
     width: '100%',
-    height: '85%',
     backgroundColor: 'white',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+    paddingVertical: 10,
     alignItems: 'center',
-    borderWidth: 1,
+  },
+  flatListContainer: {
+    width: '100%',
+    paddingBottom: 20,
+  },
+  section: {
+    width: '90%',
+    alignSelf: 'center',
+    marginBottom: 15,
   },
   letterHeader: {
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 10,
-    marginLeft: 20,
-    color: 'black',
+    color: '#003366',
   },
 });

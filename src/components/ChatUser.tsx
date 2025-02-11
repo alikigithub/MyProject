@@ -1,13 +1,33 @@
-import {Text} from '@react-navigation/elements';
 import React from 'react';
+import {Text} from '@react-navigation/elements';
 import IMAGES from '../../Assets/images';
-
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {chatuser} from '../types/type';
 import auth from '@react-native-firebase/auth';
+import {getHomeUsers, updateContactList} from '../redux/store/slice/authSlice';
+import {Swipeable} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {useAppDispatch} from '../cutomHooks/useRedux';
 
-export default function ChatUsers({items, navigation}) {
-  // console.log(items.item.profilePic);
+export default function ChatUsers({items, navigation}: any) {
+  const dispatch = useAppDispatch();
+
+  const handleDelete = (deleteID: string) => {
+    dispatch(updateContactList({deleteID}));
+    dispatch(getHomeUsers());
+  };
+
+  const renderRightActions = (deleteID: string) => (
+    <View style={styles.parentView}>
+      <View style={styles.hiddenContainer}>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(deleteID)}>
+          <Icon name="trash" size={20} color="white" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   const openChat = () => {
     const currentId = auth().currentUser?.uid;
@@ -21,9 +41,10 @@ export default function ChatUsers({items, navigation}) {
     };
     navigation.navigate('Chat', {user});
   };
+
   return (
-    <TouchableOpacity onPress={openChat}>
-      <View style={styles.subhome}>
+    <Swipeable renderRightActions={() => renderRightActions(items.item.id)}>
+      <TouchableOpacity onPress={openChat} style={styles.subhome}>
         <View
           style={
             items.item?.profilePic.trim() === ''
@@ -43,15 +64,38 @@ export default function ChatUsers({items, navigation}) {
           <Text style={styles.userName}>{items.item?.UserName}</Text>
           <Text>Have a good Day</Text>
         </View>
-        {/* <View style={styles.time}>
-        <Text style={styles.timedata}>2 min ago</Text>
-      </View> */}
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
 const styles = StyleSheet.create({
+  parentView: {
+    height: '100%',
+    width: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  deleteButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  hiddenContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+  },
   imgStyle: {
     marginTop: 10,
     height: 55,
@@ -69,14 +113,6 @@ const styles = StyleSheet.create({
   chatData: {
     justifyContent: 'center',
   },
-  time: {
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 2,
-  },
-  timedata: {
-    color: 'rgba(121, 124, 123, 0.5)',
-  },
   userName: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -85,15 +121,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 48,
   },
-  online: {
-    position: 'absolute',
-    width: 10,
-    height: 10,
-    backgroundColor: 'rgba(15, 225, 109, 1)',
-    borderRadius: '50%',
-    right: 0,
-    bottom: 8,
+  profilePic: {
+    height: 55,
+    width: 55,
   },
-
-  profilePic: {height: 55, width: 55},
 });

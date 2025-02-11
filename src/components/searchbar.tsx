@@ -1,51 +1,43 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {FlatList, Image, StyleSheet, TextInput, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 import {Text} from '@react-navigation/elements';
-import {useDispatch, useSelector} from 'react-redux';
+import SearchList from './SearchList';
+import {useAppDispatch, useAppSelector} from '../cutomHooks/useRedux';
+import {userdata} from '../types/type';
 import {chatUsers, search} from '../redux/store/slice/authSlice';
-import SearchList from './searchList';
-import {filterData} from '../types/type';
-import Loader from './Loader';
-import auth from '@react-native-firebase/auth';
 
-function Searchbar({navigation}) {
+function Searchbar({navigation}: any) {
   const [searchdata, setsearchdata] = useState<string>('');
-  const [filterdata, setfilterdata] = useState<filterData>();
-  const dispatch = useDispatch();
-  useLayoutEffect(() => {
-    dispatch(search());
-  }, []);
+  const [filterdata, setfilterdata] = useState<userdata[]>([]);
 
-  const usersData: filterData = useSelector(
+  const usersData: userdata[] = useAppSelector(
     state => state.authSlice.searchUser,
   );
-  const loading: boolean = useSelector(state => state.authSlice.loading);
-  console.log(loading);
-  console.log(usersData);
+  const dispatch = useAppDispatch();
+
   useLayoutEffect(() => {
     setfilterdata(usersData);
   }, [usersData]);
 
-  const currentUser = auth().currentUser;
   const closeSearch = () => {
-    dispatch(chatUsers(currentUser?.uid));
-    navigation.navigate('Home');
+    dispatch(chatUsers());
+    dispatch(search());
+    navigation.goBack();
   };
+
   const handletext = (text: string) => {
     setsearchdata(text);
-    if (text.trim() === '') {
-      setfilterdata(usersData);
-    } else {
-      const filtered = usersData?.filter(user =>
-        user.UserName.toLowerCase().includes(text.toLowerCase()),
-      );
-      setfilterdata(filtered);
-    }
+    setfilterdata(
+      text.trim() === ''
+        ? usersData
+        : usersData.filter((user: any) =>
+            user.UserName.toLowerCase().includes(text.toLowerCase()),
+          ),
+    );
   };
-  return loading ? (
-    <Loader />
-  ) : (
+
+  return (
     <View style={styles.mainSearch}>
       <View style={styles.searchPrt}>
         <View style={styles.searchDiv}>
@@ -57,19 +49,16 @@ function Searchbar({navigation}) {
           />
           <Image source={IMAGES.searchIconBlk} style={styles.srchImg} />
           <Text style={styles.cross} onPress={closeSearch}>
-            {' '}
             X
           </Text>
         </View>
       </View>
       <View style={styles.searhDetail}>
-        <View>
-          <Text style={styles.searchplp}>People</Text>
-        </View>
+        <Text style={styles.searchplp}>People</Text>
         <FlatList
           data={filterdata}
-          renderItem={items => <SearchList users={items} />}
-          keyExtractor={items => items.id}
+          renderItem={(items: any) => <SearchList users={items} />}
+          keyExtractor={(items: any) => items.id}
         />
       </View>
     </View>
@@ -84,8 +73,15 @@ const styles = StyleSheet.create({
   searhDetail: {
     width: '90%',
   },
-  mainSearch: {flex: 1, alignItems: 'center'},
-  searchPrt: {height: '15%', justifyContent: 'center', width: '90%'},
+  mainSearch: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  searchPrt: {
+    height: '15%',
+    justifyContent: 'center',
+    width: '90%',
+  },
   searchDiv: {
     width: '100%',
     height: 50,
@@ -95,11 +91,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     justifyContent: 'center',
   },
-  cross: {position: 'absolute', top: '23%', right: 12, fontSize: 20},
+  cross: {
+    position: 'absolute',
+    top: '23%',
+    right: 12,
+    fontSize: 20,
+  },
   srchImg: {
     position: 'absolute',
     top: '23%',
     left: 12,
   },
 });
+
 export default Searchbar;

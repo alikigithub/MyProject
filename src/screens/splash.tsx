@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 
-function Splash({navigation}) {
+function Splash() {
   return (
     <ImageBackground
       source={IMAGES.BackgroundImg}

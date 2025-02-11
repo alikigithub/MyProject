@@ -1,16 +1,15 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {signUp} from '../../../types/type';
+import {signUp, userdata} from '../../../types/type';
 import auth, {
   reauthenticateWithCredential,
   updatePassword,
 } from '@react-native-firebase/auth';
-import firestore, {collection, getDocs} from '@react-native-firebase/firestore';
+import firestore, {getDocs} from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
   try {
-    const google = await GoogleSignin.hasPlayServices();
     const userInfo = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(
       userInfo.data?.idToken as string,
@@ -22,51 +21,51 @@ export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
     console.log(userDoc.exists);
 
     if (!userDoc.exists) {
-      // If user is new, create a new document with the user data
       await userDocRef.set({
-        UserName: fullUser.displayName, // Set the Google username on the first login
+        UserName: fullUser.displayName,
         Email: fullUser.email,
-        profilePic: fullUser.photoURL, // Set the Google profile picture
-        status: '', // Initialize status as empty string
+        profilePic: fullUser.photoURL,
+        status: '',
         contact: [],
       });
     } else {
-      // If user exists, check if the UserName, profilePic, or status is already set
       const currentUserName = userDoc.data()?.UserName;
       const currentProfilePic = userDoc.data()?.profilePic;
       const currentStatus = userDoc.data()?.status;
+      const contacts = userDoc.data()?.contact;
 
       if (!currentUserName) {
-        // If no UserName is set (i.e., they haven't changed it manually), update it with the Google displayName
         await userDocRef.update({
-          UserName: fullUser.displayName, // Only update if the UserName is empty
+          UserName: fullUser.displayName,
+        });
+      }
+      if (!contacts) {
+        await userDocRef.update({
+          contact: [],
         });
       }
 
       if (!currentProfilePic) {
-        // If no profilePic is set (i.e., they haven't set a custom one), update it with the Google photoURL
         await userDocRef.update({
-          profilePic: fullUser.photoURL, // Only update if the profilePic is empty
+          profilePic: fullUser.photoURL,
         });
       }
 
       if (!currentStatus) {
-        // If no status is set, update it with an empty string or a default status (if desired)
         await userDocRef.update({
-          status: '', // You can replace '' with a default status if needed
+          status: '',
         });
       }
 
-      // If the fields are already set, no update is done, and you can print this log
       console.log('UserName, profilePic, or status already set in Firestore');
     }
 
     Alert.alert('Google Sign-In successful!');
     return {
-      UserName: userDoc.data()?.UserName || fullUser.displayName, // Always return the userName from Firestore
+      UserName: userDoc.data()?.UserName || fullUser.displayName,
       Email: fullUser.email,
-      ProfilePic: userDoc.data()?.profilePic || fullUser.photoURL, // Return profilePic from Firestore or Google
-      Status: userDoc.data()?.status || '', // Return status from Firestore or empty string
+      Status: userDoc.data()?.status || '',
+      profilePic: userDoc.data()?.profilePic || fullUser.photoURL,
     };
   } catch (error) {
     const errorMessage =
@@ -74,7 +73,21 @@ export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
     Alert.alert('Google Sign-In Error', errorMessage);
   }
 });
-
+export const updateContactList = createAsyncThunk(
+  'updateList',
+  async ({deleteID}: {deleteID: string}) => {
+    const userid = auth().currentUser?.uid;
+    const useRef = firestore().collection('Users').doc(userid);
+    try {
+      await useRef.update({
+        homeContact: firestore.FieldValue.arrayRemove(deleteID),
+      });
+      return deleteID;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
 export const signUpUser = createAsyncThunk(
   'signUp/Authentication',
   async ({
@@ -103,6 +116,7 @@ export const signUpUser = createAsyncThunk(
         contact: [],
         profilePic: '',
         status: '',
+        homeContact: [],
       });
       return {
         UserName: username,
@@ -110,6 +124,7 @@ export const signUpUser = createAsyncThunk(
         contact: [],
         profilePic: '',
         status: '',
+        homeContact: [],
       };
     } catch (error: any) {
       throw new Error(error.message || 'An error occurred during sign up');
@@ -139,7 +154,9 @@ export const loginUser = createAsyncThunk(
         email: usercredentials.user.email,
       };
     } catch (error: any) {
-      throw new Error(error.message || 'An error occurred during  log in');
+      if (error.code === 'auth/invalid-credential') {
+        Alert.alert('Email Does not Exist');
+      }
     }
   },
 );
@@ -159,7 +176,7 @@ export const search = createAsyncThunk('Search/Users', async () => {
       }));
     return usersdata;
   } catch (error) {
-    console.log('errr', error);
+    console.log('working', error);
   }
 });
 export const contact = createAsyncThunk(
@@ -189,24 +206,28 @@ export const contact = createAsyncThunk(
       ]);
       const currentConteacts = currentUserIdDoc.data()?.contact;
       const otherContacts = otherUserIDDoc.data()?.contact;
+      console.log('currentuser ', currentConteacts);
+      console.log('otheruserid', otherContacts);
       return {
         currentUserId,
         currentConteacts,
         otherUserID,
         otherContacts,
       };
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   },
 );
 
-export const chatUsers = createAsyncThunk('chatUsers/chat', async userId => {
+export const chatUsers = createAsyncThunk('chatUsers/chat', async () => {
+  const userId = auth().currentUser?.uid;
+
   const userDoc = await firestore().collection('Users').doc(userId).get();
   const arrayofIDs = userDoc.data()?.contact;
 
   const data = await Promise.all(
-    arrayofIDs.map(async idData => {
+    arrayofIDs.map(async (idData: any) => {
       const idsData = await firestore().collection('Users').doc(idData).get();
       if (idsData.exists) {
         return {
@@ -218,9 +239,62 @@ export const chatUsers = createAsyncThunk('chatUsers/chat', async userId => {
     }),
   );
 
-  console.log(data);
+  console.log('data add friend', data);
   return data.filter(user => user !== null);
 });
+
+export const homeUsers = createAsyncThunk(
+  'homeUsers/chat',
+  async (userId: string) => {
+    const currentid = auth().currentUser?.uid;
+    console.log(currentid);
+
+    const useref = firestore().collection('Users').doc(currentid);
+    const userDoc = await useref.get();
+
+    const arrayofIDs = userDoc.data()?.homeContact || [];
+
+    if (!arrayofIDs.includes(userId)) {
+      arrayofIDs.push(userId);
+      await useref.update({
+        homeContact: firestore.FieldValue.arrayUnion(userId),
+      });
+    }
+    return arrayofIDs;
+  },
+);
+export const getHomeUsers = createAsyncThunk('gethomeuser/chat', async () => {
+  try {
+    const current = auth().currentUser?.uid;
+
+    const updatedDoc = await firestore().collection('Users').doc(current).get();
+    const dataofUsers = updatedDoc.data()?.homeContact || [];
+
+    const data = await Promise.all(
+      dataofUsers.map(async (idData: any) => {
+        if (idData !== current) {
+          const idsData = await firestore()
+            .collection('Users')
+            .doc(idData)
+            .get();
+          if (idsData.exists) {
+            return {
+              id: idsData.id,
+              ...idsData.data(),
+            };
+          }
+        }
+        return null;
+      }),
+    );
+    console.log(data);
+    return data.filter(user => user !== null);
+  } catch (error) {
+    console.error('Error fetching home users:', error);
+    return [];
+  }
+});
+
 export const sendMessage = createAsyncThunk(
   'sendMesage/chat',
   async ({
@@ -263,7 +337,7 @@ export const sendMessage = createAsyncThunk(
 );
 export const sendprofilePic = createAsyncThunk(
   'sendPic/Chat',
-  async ({userId, ProfileUrl}) => {
+  async ({userId, ProfileUrl}: {userId: string; ProfileUrl: string}) => {
     console.log();
     try {
       const useRef = firestore().collection('Users').doc(userId);
@@ -278,7 +352,7 @@ export const sendprofilePic = createAsyncThunk(
 );
 export const sendstatus = createAsyncThunk(
   'statusUpdate/Chat',
-  async ({userId, updatedStatus}) => {
+  async ({userId, updatedStatus}: {userId: string; updatedStatus: string}) => {
     console.log();
     try {
       const useRef = firestore().collection('Users').doc(userId);
@@ -293,7 +367,13 @@ export const sendstatus = createAsyncThunk(
 );
 export const sendUserNmae = createAsyncThunk(
   'userNameUpdate/Chat',
-  async ({userId, UpdateUserName}) => {
+  async ({
+    userId,
+    UpdateUserName,
+  }: {
+    userId: string;
+    UpdateUserName: string;
+  }) => {
     try {
       const useRef = firestore().collection('Users').doc(userId);
       console.log(UpdateUserName);
@@ -308,18 +388,28 @@ export const sendUserNmae = createAsyncThunk(
 );
 export const changePasswordSlice = createAsyncThunk(
   'updatePassword/chat',
-  async ({currentPassword, newPassword}) => {
+  async ({
+    currentPassword,
+    newPassword,
+  }: {
+    currentPassword: string;
+    newPassword: string;
+  }) => {
     const current = auth().currentUser;
     try {
       const credential = auth.EmailAuthProvider.credential(
-        current?.email,
+        current?.email || '',
         currentPassword,
       );
-      await reauthenticateWithCredential(current, credential);
+      if (current) {
+        await reauthenticateWithCredential(current, credential);
+      } else {
+        throw new Error('No current user found');
+      }
       await updatePassword(current, newPassword);
       console.log('updation working fine');
       Alert.alert('Password updated successfully!');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'auth/wrong-password') {
         Alert.alert('The current password is incorrect. Please try again.');
       } else if (error.code === 'auth/weak-password') {
@@ -332,12 +422,12 @@ export const changePasswordSlice = createAsyncThunk(
 );
 export const forgetPassword = createAsyncThunk(
   'forgetPassword/chat',
-  async ({email}) => {
+  async (email: string) => {
     try {
       console.log(email);
       await auth().sendPasswordResetEmail(email);
       Alert.alert('email send ');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'auth/invalid-email') {
         console.log(error.code);
         Alert.alert('Invalid Email');
@@ -359,9 +449,14 @@ const initialState = {
   contacts: [],
   profilePic: '',
   status: '',
-  searchUser: [],
+  searchUser: [] as userdata[],
   addUsers: [],
   searchLoading: false,
+  homeContact: [],
+  homeContactData: [],
+  homedataofUsers: [],
+  deleteLoader: false,
+  loginError: '',
 } as signUp;
 
 const authSlice = createSlice({
@@ -369,6 +464,9 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     resetState: () => initialState,
+    homelistData: (state, action) => {
+      state.homeContactData = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -384,9 +482,9 @@ const authSlice = createSlice({
         state.status = action.payload.status;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.userid = action.payload.UserID;
-        state.username = action.payload.userName;
-        state.email = action.payload.email;
+        state.userid = action.payload?.UserID || '';
+        state.username = action.payload?.userName;
+        state.email = action.payload?.email || '';
       })
       .addCase(search.pending, state => {
         state.loading = true;
@@ -409,24 +507,42 @@ const authSlice = createSlice({
         console.log(state.addUsers);
         state.loading = false;
       })
+      .addCase(homeUsers.pending, state => {
+        state.loading = true;
+      })
+      .addCase(homeUsers.fulfilled, (state, action) => {
+        state.homeContact = action.payload;
+        state.loading = false;
+      })
       .addCase(sendprofilePic.pending, state => {
         state.loading = true;
       })
       .addCase(sendprofilePic.fulfilled, (state, action) => {
-        state.profilePic = action.payload;
+        state.profilePic = action.payload ?? '';
       })
       .addCase(sendUserNmae.fulfilled, (state, action) => {
-        state.username = action.payload;
+        state.username = action.payload ?? '';
       })
       .addCase(sendstatus.fulfilled, (state, action) => {
-        state.status = action.payload;
+        state.status = action.payload ?? '';
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.username = action.payload?.UserName || '';
         state.email = action.payload?.Email || '';
-        state.profilePic = action.payload?.ProfilePic || '';
+        state.profilePic = action.payload?.profilePic || '';
+      })
+      .addCase(getHomeUsers.fulfilled, (state, action) => {
+        state.homedataofUsers = action.payload;
+      })
+      .addCase(updateContactList.pending, state => {
+        state.deleteLoader = true;
+      })
+      .addCase(updateContactList.fulfilled, (state, action) => {
+        state.homeContact = state.homeContact.filter(
+          homedata => homedata !== action.payload,
+        );
       });
   },
 });
-export const {resetState} = authSlice.actions;
+export const {resetState, homelistData} = authSlice.actions;
 export default authSlice.reducer;

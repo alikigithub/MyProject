@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Splash from '../screens/splash';
+import Splash from '../screens/Splash';
 import AuthScreen from '../screens/Auth';
-import SignUP from '../screens/signup';
+import SignUP from '../screens/Signup';
 import CustomHeader from '../components/CustomHeader';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import Login from '../screens/login';
+import Login from '../screens/Login';
 import HomeNavigation from './homeNavigation';
 import ChatScreen from '../screens/Chat';
 import ForgetPassword from '../screens/ForgetPassword';
-import Searchbar from '../components/searchbar';
+import Searchbar from '../components/Searchbar';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const Stack = createNativeStackNavigator();

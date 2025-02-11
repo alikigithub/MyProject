@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import IMAGES from '../../Assets/images';
 import {
-  ActivityIndicator,
   Alert,
   Image,
   ImageBackground,
@@ -10,144 +8,152 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
-import auth from '@react-native-firebase/auth';
-import ButtonTemp from '../components/button';
+import IMAGES from '../../Assets/images';
+import ButtonTemp from '../components/Button';
 import Loader from '../components/Loader';
 import {changePasswordSlice} from '../redux/store/slice/authSlice';
-export default function Profile({navigation}) {
-  const [password, setpassword] = useState<string>('');
-  const [newpassword, setNewpassword] = useState<string>('');
-  const [confirmPassword, setconfirmPassword] = useState<string>('');
-  const [loading, setloading] = useState<boolean>(false);
+import {useAppDispatch} from '../cutomHooks/useRedux';
 
-  const dispatch = useDispatch();
+const {height} = Dimensions.get('window');
+const adjheight = height - 50;
+
+export default function Profile({navigation}: any) {
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const UpdatePassword = async () => {
-    if (newpassword !== confirmPassword) {
-      Alert.alert('Both Passwords Are Not Same');
-    } else {
-      try {
-        setloading(true);
-        if (password?.trim() === '' && newpassword?.trim() === '') {
-          Alert.alert('Please Complete the Relevent Field');
-        } else {
-          await dispatch(
-            changePasswordSlice({
-              currentPassword: password,
-              newPassword: confirmPassword,
-            }),
-          );
-        }
-      } catch (error) {
-        Alert.alert(error);
-        console.log(error);
-      } finally {
-        setloading(false);
-        setpassword('');
-        setconfirmPassword('');
-        setNewpassword('');
-      }
+    if (!password || !newPassword || !confirmPassword) {
+      return Alert.alert('Error', 'Please fill in all fields.');
+    }
+    if (newPassword !== confirmPassword) {
+      return Alert.alert(
+        'Error',
+        'New password and confirmation do not match.',
+      );
+    }
+
+    try {
+      setLoading(true);
+      await dispatch(
+        changePasswordSlice({
+          currentPassword: password,
+          newPassword: confirmPassword,
+        }),
+      );
+      Alert.alert('Success', 'Password updated successfully!');
+      setPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Something went wrong');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <ImageBackground
-      source={IMAGES.BackgroundImg}
-      style={styles.background}
-      resizeMode="cover">
-      <View style={styles.parentView}>
-        <View style={styles.topBar}>
-          <View style={styles.backtick}>
-            <TouchableOpacity onPress={() => navigation.navigate('setting')}>
+    <ScrollView>
+      <ImageBackground
+        source={IMAGES.BackgroundImg}
+        style={styles.background}
+        resizeMode="cover">
+        <View style={styles.parentView}>
+          <View style={styles.topBar}>
+            <TouchableOpacity
+              style={styles.backtick}
+              onPress={() => navigation.navigate('setting')}>
               <Image source={IMAGES.backtickWhite} />
             </TouchableOpacity>
+            <Text style={styles.headingTxt}>Change Password</Text>
           </View>
-          <Text style={styles.headingTxt}>Change Password</Text>
-        </View>
-        {loading ? (
-          <Loader />
-        ) : (
-          <View style={styles.homeMain}>
-            <View style={styles.form}>
-              <View style={styles.formUserName}>
-                <Text style={styles.formLables}>Current Password</Text>
-                <TextInput value={password} onChangeText={setpassword} />
+          {loading ? (
+            <Loader />
+          ) : (
+            <View style={styles.homeMain}>
+              <View style={styles.form}>
+                <View style={styles.formField}>
+                  <Text style={styles.formLabel}>Current Password</Text>
+                  <TextInput
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    style={styles.input}
+                  />
+                </View>
+                <View style={styles.formField}>
+                  <Text style={styles.formLabel}>New Password</Text>
+                  <TextInput
+                    value={newPassword}
+                    onChangeText={setNewPassword}
+                    secureTextEntry
+                    style={styles.input}
+                  />
+                </View>
+                <View style={styles.formField}>
+                  <Text style={styles.formLabel}>Confirm Password</Text>
+                  <TextInput
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry
+                    style={styles.input}
+                  />
+                </View>
               </View>
-              <View style={styles.formUserName}>
-                <Text style={styles.formLables}>New Password</Text>
-                <TextInput value={newpassword} onChangeText={setNewpassword} />
-              </View>
-              <View style={styles.formUserName}>
-                <Text style={styles.formLables}>Confirm Password</Text>
-                <TextInput
-                  value={confirmPassword}
-                  onChangeText={setconfirmPassword}
+              <View style={styles.btnView}>
+                <ButtonTemp
+                  titleName="Update Password"
+                  onpress={UpdatePassword}
                 />
               </View>
             </View>
-
-            <ButtonTemp titleName="Update Profile" onpress={UpdatePassword} />
-          </View>
-        )}
-      </View>
-    </ImageBackground>
+          )}
+        </View>
+      </ImageBackground>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  formLables: {
+  btnView: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 60,
+  },
+  formLabel: {
     color: '#3D4A7A',
     fontSize: 16,
   },
-  formUserName: {
-    marginBottom: 10,
-    marginTop: 20,
+  formField: {
+    marginBottom: 20,
     width: '100%',
-    height: 65,
     borderBottomWidth: 1,
     borderBottomColor: '#CDD1D0',
     justifyContent: 'center',
   },
-  form: {width: '90%', height: '60%', alignItems: 'center'},
-  editView: {
-    height: 20,
-    width: 20,
-    borderRadius: 50,
-    backgroundColor: 'black',
-    justifyContent: 'center',
+  input: {
+    fontSize: 16,
+    paddingVertical: 8,
+  },
+  form: {
+    marginTop: 45,
+    width: '90%',
+    height: '60%',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 1,
-    right: 1,
   },
-  edit: {
-    height: 12,
-    width: 12,
-  },
-
-  imgStyle: {
-    marginTop: 10,
-    height: 80,
-    width: 80,
-    borderRadius: 50,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  btn: {
-    width: '100%',
-    height: 90,
-    borderWidth: 1,
-  },
-  profilePic: {height: '100%', width: '100%'},
-
   backtick: {
     flexGrow: 0.5,
   },
   parentView: {
-    flex: 1,
     alignItems: 'center',
+    height: adjheight,
   },
   background: {
     flex: 1,
@@ -160,12 +166,9 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   headingTxt: {
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: 'bold',
     color: 'white',
-  },
-  searchText: {
-    color: 'white',
-    fontSize: 16,
   },
   homeMain: {
     width: '100%',
@@ -174,5 +177,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

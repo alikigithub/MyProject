@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import IMAGES from '../../Assets/images';
-import Searchbar from '../components/searchbar';
+
 import {
   FlatList,
   Image,
@@ -10,35 +10,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {chatUsers, resetState} from '../redux/store/slice/authSlice';
 import ChatUsers from '../components/ChatUser';
 import {Text} from '@react-navigation/elements';
-import Loader from '../components/Loader';
-import {useFocusEffect} from '@react-navigation/native';
+import {chatUsers, getHomeUsers, search} from '../redux/store/slice/authSlice';
+import {useAppDispatch, useAppSelector} from '../cutomHooks/useRedux';
 
-export default function Home({navigation}) {
-  const currentUser = auth().currentUser;
-  const dispatch = useDispatch();
-  const listofUsers = useSelector(state => state.authSlice.addUsers);
-  const loading = useSelector(state => state.authSlice.loading);
-  const profile = useSelector(state => state.authSlice.profilePic);
-  console.log(profile);
+export default function Home({navigation}: any) {
+  const currentUser = auth().currentUser?.uid;
+  const dispatch = useAppDispatch();
+  const profile = useAppSelector(state => state.authSlice.profilePic);
+  const listofUsers = useAppSelector(state => state.authSlice.homedataofUsers);
 
-  // const updatedListOfUsers = listofUsers.map(user => ({
-  //   ...user,
-  //   profilePic: user.profilePic || '', // Ensure that profilePic is always a string
-  // }));
-  console.log(listofUsers);
-  console.log(loading);
-  useFocusEffect(
-    React.useCallback(() => {
-      if (currentUser) {
-        dispatch(chatUsers(currentUser?.uid));
-      }
-    }, [dispatch, currentUser?.uid]),
-  );
-
+  useEffect(() => {
+    dispatch(search());
+    dispatch(chatUsers());
+    dispatch(getHomeUsers());
+  }, [currentUser, dispatch]);
   return (
     <ImageBackground
       source={IMAGES.BackgroundImg}
@@ -66,21 +53,18 @@ export default function Home({navigation}) {
             />
           </TouchableOpacity>
         </View>
-        {loading ? (
-          <Loader />
-        ) : (
-          <View style={styles.homeMain}>
-            <View style={styles.subHome}>
-              <FlatList
-                data={listofUsers}
-                renderItem={item => (
-                  <ChatUsers items={item} navigation={navigation} />
-                )}
-                keyExtractor={item => item.id}
-              />
-            </View>
+
+        <View style={styles.homeMain}>
+          <View style={styles.subHome}>
+            <FlatList
+              data={listofUsers}
+              renderItem={item => (
+                <ChatUsers items={item} navigation={navigation} />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
           </View>
-        )}
+        </View>
       </View>
     </ImageBackground>
   );
@@ -101,13 +85,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   homeMain: {
+    flex: 1,
     width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'white',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
+    paddingVertical: 10,
     alignItems: 'center',
-    borderWidth: 1,
   },
   parentView: {
     flex: 1,
@@ -141,9 +125,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headingTxt: {
-    fontSize: 20,
-    fontWeight: 500,
-    color: 'rgba(255, 255, 255, 1)',
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
   },
   profilePic: {height: 55, width: 55},
 });

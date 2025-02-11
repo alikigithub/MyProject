@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import IMAGES from '../../Assets/images';
 import {
   ActivityIndicator,
@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 import {launchImageLibrary} from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import {
@@ -19,21 +18,23 @@ import {
   sendstatus,
   sendUserNmae,
 } from '../redux/store/slice/authSlice';
-import ButtonTemp from '../components/button';
+import ButtonTemp from '../components/Button';
 import Loader from '../components/Loader';
-export default function Profile({navigation}) {
-  const status: string = useSelector(state => state.authSlice.status);
-  const profilePic: string = useSelector(state => state.authSlice.profilePic);
-  const email: string = useSelector(state => state.authSlice.email);
-  const userName: string = useSelector(state => state.authSlice.username);
-  console.log(userName);
+import {useAppDispatch, useAppSelector} from '../cutomHooks/useRedux';
+export default function Profile({navigation}: any) {
+  const status: string = useAppSelector(state => state.authSlice.status);
+  const profilePic: string = useAppSelector(
+    state => state.authSlice.profilePic,
+  );
+  const email: string = useAppSelector(state => state.authSlice.email);
+  const userName: string = useAppSelector(state => state.authSlice.username);
 
-  const [userNameData, setUserName] = useState<string>();
-  const [statusData, setStatusData] = useState<string>();
-  const [profile, setprofile] = useState<string>();
+  const [userNameData, setUserName] = useState<string>('');
+  const [statusData, setStatusData] = useState<string>('');
+  const [profile, setprofile] = useState<string>('');
   const [loading, setloading] = useState<boolean>(false);
-  const currentID = auth().currentUser?.uid;
-  const dispatch = useDispatch();
+  const currentID: string = auth().currentUser?.uid || '';
+  const dispatch = useAppDispatch();
   useEffect(() => {
     setprofile(profilePic);
     setUserName(userName);
@@ -43,7 +44,7 @@ export default function Profile({navigation}) {
     launchImageLibrary(
       {
         mediaType: 'photo',
-        includeBase64: false,
+        includeBase64: true,
         quality: 0,
         selectionLimit: 1,
       },
@@ -54,15 +55,15 @@ export default function Profile({navigation}) {
           Alert.alert('Error: ', response.errorCode);
         } else {
           if (response.assets && response.assets.length > 0) {
-            const uri = response.assets[0].uri;
-            setprofile(uri);
+            const uri = response.assets[0].base64;
+            const base64 = `data:image/jpeg;base64,${uri}`;
+            setprofile(base64);
           }
         }
       },
     );
   };
   const UpdateProfile = async () => {
-    setloading(true);
     try {
       await dispatch(sendprofilePic({userId: currentID, ProfileUrl: profile}));
 
@@ -218,7 +219,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   headingTxt: {
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: 'bold',
     color: 'white',
   },
   searchText: {
