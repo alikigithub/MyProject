@@ -1,19 +1,14 @@
 import React from 'react';
-import {
-  FlatList,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 import ChatUsersContacts from '../components/ChatUsersContact';
-import { useAppSelector } from '../cutomHooks/useRedux';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {useAppSelector} from '../cutomHooks/useRedux';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import SmallLoader from '../components/SmallLoader';
 
 type RootStackParamList = {
   Contact: undefined;
-  Chat: { userId: string };
+  Chat: {userId: string};
 };
 
 type ContactProps = NativeStackScreenProps<RootStackParamList, 'Contact'>;
@@ -34,8 +29,11 @@ const groupUsersByLetter = (users: User[]) => {
   }, {});
 };
 
-export default function Contact({ navigation }: ContactProps) {
+export default function Contact({navigation}: ContactProps) {
   const listOfUsers = useAppSelector(state => state.authSlice.addUsers);
+  const contactLoader = useAppSelector(
+    state => state.authSlice.chatUsersloader,
+  );
   const groupedUsers = groupUsersByLetter(listOfUsers);
   const sections = Object.keys(groupedUsers).sort();
 
@@ -49,25 +47,36 @@ export default function Contact({ navigation }: ContactProps) {
           <Text style={styles.headingTxt}>Contacts</Text>
         </View>
         <View style={styles.homeMain}>
-          <FlatList
-            data={sections}
-            keyExtractor={item => item}
-            contentContainerStyle={styles.flatListContainer}
-            removeClippedSubviews
-            renderItem={({ item: letter }) => (
-              <View style={styles.section}>
-                <Text style={styles.letterHeader}>{letter}</Text>
-                <FlatList
-                  data={groupedUsers[letter]}
-                  keyExtractor={user => user.id}
-                  removeClippedSubviews
-                  renderItem={({ item }) => (
-                    <ChatUsersContacts items={{ item }} navigation={navigation} />
-                  )}
-                />
-              </View>
-            )}
-          />
+          {contactLoader ? (
+            <SmallLoader />
+          ) : (
+            <FlatList
+              data={sections}
+              keyExtractor={item => item}
+              contentContainerStyle={styles.flatListContainer}
+              removeClippedSubviews
+              showsVerticalScrollIndicator={false} // Hide vertical scrollbar
+              showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
+              renderItem={({item: letter}) => (
+                <View style={styles.section}>
+                  <Text style={styles.letterHeader}>{letter}</Text>
+                  <FlatList
+                    data={groupedUsers[letter]}
+                    keyExtractor={user => user.id}
+                    removeClippedSubviews
+                    showsVerticalScrollIndicator={false} // Hide vertical scrollbar
+                    showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
+                    renderItem={({item}) => (
+                      <ChatUsersContacts
+                        items={{item}}
+                        navigation={navigation}
+                      />
+                    )}
+                  />
+                </View>
+              )}
+            />
+          )}
         </View>
       </View>
     </ImageBackground>

@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import IMAGES from '../../Assets/images';
 
-const AddUserButton = ({onPress}) => {
+const AddUserButton = ({onPress}: any) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Image source={IMAGES.LogoImg} style={styles.icon} />

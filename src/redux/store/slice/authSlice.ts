@@ -7,7 +7,7 @@ import auth, {
 import firestore, {getDocs} from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
+import {produce} from 'immer';
 export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
   try {
     const userInfo = await GoogleSignin.signIn();
@@ -18,7 +18,6 @@ export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
     const fullUser = userCredential.user;
     const userDocRef = firestore().collection('Users').doc(fullUser.uid);
     const userDoc = await userDocRef.get();
-    console.log(userDoc.exists);
 
     if (!userDoc.exists) {
       await userDocRef.set({
@@ -56,8 +55,6 @@ export const signInWithGoogle = createAsyncThunk('withGoogle', async () => {
           status: '',
         });
       }
-
-      console.log('UserName, profilePic, or status already set in Firestore');
     }
 
     Alert.alert('Google Sign-In successful!');
@@ -83,9 +80,7 @@ export const updateContactList = createAsyncThunk(
         homeContact: firestore.FieldValue.arrayRemove(deleteID),
       });
       return deleteID;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 );
 export const signUpUser = createAsyncThunk(
@@ -100,12 +95,10 @@ export const signUpUser = createAsyncThunk(
     password: string;
   }) => {
     try {
-      console.log(email, password);
       const userCredential = await auth().createUserWithEmailAndPassword(
         email,
         password,
       );
-      console.log(userCredential.user);
       const user = userCredential.user;
       await user.updateProfile({
         displayName: username,
@@ -136,7 +129,6 @@ export const loginUser = createAsyncThunk(
   'login/Authentication',
   async ({email, password}: {email: string; password: string}) => {
     try {
-      console.log(email, password);
       const usercredentials = await auth().signInWithEmailAndPassword(
         email,
         password,
@@ -145,9 +137,7 @@ export const loginUser = createAsyncThunk(
         .collection('Users')
         .doc(usercredentials.user.uid)
         .get();
-      console.log(username);
       const user = username.exists ? username.data()?.UserName : null;
-      console.log(user);
       return {
         userName: user,
         UserID: usercredentials.user.uid,
@@ -164,9 +154,7 @@ export const search = createAsyncThunk('Search/Users', async () => {
   try {
     const current = auth().currentUser;
     const userdataquery = firestore().collection('Users');
-    console.log(userdataquery);
     const querysnapshot = await getDocs(userdataquery);
-    console.log(querysnapshot);
 
     const usersdata = querysnapshot.docs
       .filter(user => current?.uid !== user.id)
@@ -175,9 +163,7 @@ export const search = createAsyncThunk('Search/Users', async () => {
         ...user.data(),
       }));
     return usersdata;
-  } catch (error) {
-    console.log('working', error);
-  }
+  } catch (error) {}
 });
 export const contact = createAsyncThunk(
   'Conatct/User',
@@ -192,7 +178,6 @@ export const contact = createAsyncThunk(
     thunkAPI,
   ) => {
     try {
-      console.log(currentUserId, otherUserID);
       const useRef = firestore().collection('Users');
       await useRef.doc(currentUserId).update({
         contact: firestore.FieldValue.arrayUnion(otherUserID),
@@ -206,8 +191,6 @@ export const contact = createAsyncThunk(
       ]);
       const currentConteacts = currentUserIdDoc.data()?.contact;
       const otherContacts = otherUserIDDoc.data()?.contact;
-      console.log('currentuser ', currentConteacts);
-      console.log('otheruserid', otherContacts);
       return {
         currentUserId,
         currentConteacts,
@@ -238,8 +221,6 @@ export const chatUsers = createAsyncThunk('chatUsers/chat', async () => {
       return null;
     }),
   );
-
-  console.log('data add friend', data);
   return data.filter(user => user !== null);
 });
 
@@ -247,7 +228,6 @@ export const homeUsers = createAsyncThunk(
   'homeUsers/chat',
   async (userId: string) => {
     const currentid = auth().currentUser?.uid;
-    console.log(currentid);
 
     const useref = firestore().collection('Users').doc(currentid);
     const userDoc = await useref.get();
@@ -287,7 +267,6 @@ export const getHomeUsers = createAsyncThunk('gethomeuser/chat', async () => {
         return null;
       }),
     );
-    console.log(data);
     return data.filter(user => user !== null);
   } catch (error) {
     console.error('Error fetching home users:', error);
@@ -330,39 +309,31 @@ export const sendMessage = createAsyncThunk(
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 );
 export const sendprofilePic = createAsyncThunk(
   'sendPic/Chat',
   async ({userId, ProfileUrl}: {userId: string; ProfileUrl: string}) => {
-    console.log();
     try {
       const useRef = firestore().collection('Users').doc(userId);
       await useRef.update({
         profilePic: ProfileUrl,
       });
       return ProfileUrl;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 );
 export const sendstatus = createAsyncThunk(
   'statusUpdate/Chat',
   async ({userId, updatedStatus}: {userId: string; updatedStatus: string}) => {
-    console.log();
     try {
       const useRef = firestore().collection('Users').doc(userId);
       await useRef.update({
         status: updatedStatus,
       });
       return updatedStatus;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 );
 export const sendUserNmae = createAsyncThunk(
@@ -376,14 +347,11 @@ export const sendUserNmae = createAsyncThunk(
   }) => {
     try {
       const useRef = firestore().collection('Users').doc(userId);
-      console.log(UpdateUserName);
       await useRef.update({
         UserName: UpdateUserName,
       });
       return UpdateUserName;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 );
 export const changePasswordSlice = createAsyncThunk(
@@ -407,7 +375,6 @@ export const changePasswordSlice = createAsyncThunk(
         throw new Error('No current user found');
       }
       await updatePassword(current, newPassword);
-      console.log('updation working fine');
       Alert.alert('Password updated successfully!');
     } catch (error: any) {
       if (error.code === 'auth/wrong-password') {
@@ -424,12 +391,10 @@ export const forgetPassword = createAsyncThunk(
   'forgetPassword/chat',
   async (email: string) => {
     try {
-      console.log(email);
       await auth().sendPasswordResetEmail(email);
       Alert.alert('email send ');
     } catch (error: any) {
       if (error.code === 'auth/invalid-email') {
-        console.log(error.code);
         Alert.alert('Invalid Email');
       }
       if (error.code === 'auth/user-not-found') {
@@ -446,7 +411,7 @@ const initialState = {
   email: ' ',
   loading: false,
   userid: '',
-  contacts: [],
+  contacts: {},
   profilePic: '',
   status: '',
   searchUser: [] as userdata[],
@@ -457,6 +422,8 @@ const initialState = {
   homedataofUsers: [],
   deleteLoader: false,
   loginError: '',
+  getHomeUsersloader: false,
+  chatUsersloader: false,
 } as signUp;
 
 const authSlice = createSlice({
@@ -466,6 +433,50 @@ const authSlice = createSlice({
     resetState: () => initialState,
     homelistData: (state, action) => {
       state.homeContactData = action.payload;
+    },
+    contactlist: (state, action) => {
+      state.chatUsersloader = action.payload;
+    },
+    searchUserUpdate: (state, action) => {
+      const firstuser = auth()?.currentUser?.uid;
+      const secondid = action.payload;
+
+      if (!firstuser || !secondid) {
+        return;
+      }
+
+      state.contacts = {
+        ...state.contacts,
+        [firstuser]: [...(state.contacts[firstuser] || []), secondid],
+        [secondid]: [...(state.contacts[secondid] || []), firstuser],
+      };
+    },
+    currentUserUpdate: state => {
+      state.userid = auth().currentUser?.uid || '';
+    },
+    updatedel: (state, action) => {
+      const homedata = state.homedataofUsers.filter(
+        (userid: any) => userid.id !== action.payload,
+      );
+
+      state.homedataofUsers = homedata;
+    },
+
+    updateSearch: (state, action) => {
+      return produce(state, draft => {
+        if (draft.searchUser[0]) {
+          draft.searchUser[0].contact = [
+            ...draft.searchUser[0].contact,
+            action.payload,
+          ];
+        }
+
+        draft.searchUser = [...draft.searchUser];
+      });
+    },
+    chathome: (state, action) => {
+      console.log(action.payload);
+      console.log(state.homedataofUsers);
     },
   },
   extraReducers: builder => {
@@ -496,16 +507,22 @@ const authSlice = createSlice({
       .addCase(contact.fulfilled, (state, action) => {
         const {currentUserId, currentConteacts, otherUserID, otherContacts} =
           action.payload;
-        state.contacts[currentUserId] = currentConteacts;
-        state.contacts[otherUserID] = otherContacts;
+
+        state.contacts = {
+          ...state.contacts,
+          [currentUserId]: [
+            ...(state.contacts[currentUserId] || []),
+            ...currentConteacts,
+          ],
+          [otherUserID]: [
+            ...(state.contacts[otherUserID] || []),
+            ...otherContacts,
+          ],
+        };
       })
-      .addCase(chatUsers.pending, state => {
-        state.loading = true;
-      })
+
       .addCase(chatUsers.fulfilled, (state, action) => {
         state.addUsers = action.payload;
-        console.log(state.addUsers);
-        state.loading = false;
       })
       .addCase(homeUsers.pending, state => {
         state.loading = true;
@@ -531,8 +548,12 @@ const authSlice = createSlice({
         state.email = action.payload?.Email || '';
         state.profilePic = action.payload?.profilePic || '';
       })
+      .addCase(getHomeUsers.pending, state => {
+        state.getHomeUsersloader = true;
+      })
       .addCase(getHomeUsers.fulfilled, (state, action) => {
         state.homedataofUsers = action.payload;
+        state.getHomeUsersloader = false;
       })
       .addCase(updateContactList.pending, state => {
         state.deleteLoader = true;
@@ -544,5 +565,14 @@ const authSlice = createSlice({
       });
   },
 });
-export const {resetState, homelistData} = authSlice.actions;
+export const {
+  resetState,
+  homelistData,
+  contactlist,
+  searchUserUpdate,
+  currentUserUpdate,
+  updateSearch,
+  updatedel,
+  chathome,
+} = authSlice.actions;
 export default authSlice.reducer;

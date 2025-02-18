@@ -5,9 +5,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
+import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import AuthNavigation from './src/navigations/authNavigation';
 import {Provider} from 'react-redux';

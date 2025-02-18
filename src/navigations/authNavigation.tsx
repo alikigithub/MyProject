@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Splash from '../screens/Splash';
@@ -32,12 +32,13 @@ function AuthNavigation() {
         '444947491391-9t7o8o77oj7tqdkior1hpq1irekt9270.apps.googleusercontent.com',
     });
   });
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         {loading ? (
           <Stack.Screen
-            name="Spash"
+            name="Splash"
             component={Splash}
             options={{
               headerShown: false,

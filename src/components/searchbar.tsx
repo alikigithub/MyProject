@@ -3,26 +3,21 @@ import {FlatList, Image, StyleSheet, TextInput, View} from 'react-native';
 import IMAGES from '../../Assets/images';
 import {Text} from '@react-navigation/elements';
 import SearchList from './SearchList';
-import {useAppDispatch, useAppSelector} from '../cutomHooks/useRedux';
+import {useAppSelector} from '../cutomHooks/useRedux';
 import {userdata} from '../types/type';
-import {chatUsers, search} from '../redux/store/slice/authSlice';
 
 function Searchbar({navigation}: any) {
   const [searchdata, setsearchdata] = useState<string>('');
   const [filterdata, setfilterdata] = useState<userdata[]>([]);
-
   const usersData: userdata[] = useAppSelector(
     state => state.authSlice.searchUser,
   );
-  const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     setfilterdata(usersData);
   }, [usersData]);
 
   const closeSearch = () => {
-    dispatch(chatUsers());
-    dispatch(search());
     navigation.goBack();
   };
 

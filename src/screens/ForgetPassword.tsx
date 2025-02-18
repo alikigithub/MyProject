@@ -20,10 +20,8 @@ function ForgetPassword() {
     }
     try {
       setloader(true);
-      console.log(email);
       await dispatch(forgetPassword(email));
     } catch (error) {
-      console.log(error);
     } finally {
       setloader(false);
       setemail('');

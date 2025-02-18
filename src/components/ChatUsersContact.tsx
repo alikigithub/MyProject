@@ -4,7 +4,7 @@ import IMAGES from '../../Assets/images';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {chatuser} from '../types/type';
 import auth from '@react-native-firebase/auth';
-import {homeUsers} from '../redux/store/slice/authSlice';
+import {chathome, homeUsers} from '../redux/store/slice/authSlice';
 import {NavigationProp} from '@react-navigation/native';
 import {useAppDispatch} from '../cutomHooks/useRedux';
 
@@ -39,6 +39,7 @@ export default function ChatUsersContacts({
       otherUserID,
       otherUserName: items.item.UserName,
     };
+    dispatch(chathome(otherUserID));
     dispatch(homeUsers(otherUserID));
     navigation.navigate('Chat', {user});
   };

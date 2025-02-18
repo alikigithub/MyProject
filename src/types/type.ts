@@ -17,6 +17,8 @@ export type signUp = {
   homedataofUsers: string[];
   deleteLoader: boolean;
   loginError: string;
+  getHomeUsersloader: boolean;
+  chatUsersloader: boolean;
 };
 export type contactstype = {[key: string]: string};
 export type chatboxType = {};

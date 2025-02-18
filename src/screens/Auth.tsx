@@ -6,6 +6,8 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
 import React from 'react';
@@ -20,43 +22,51 @@ type AuthScreenProps = NativeStackScreenProps<{
 
 function AuthScreen({navigation}: AuthScreenProps) {
   const dispatch = useAppDispatch();
-
   return (
-    <ImageBackground
-      source={IMAGES.BackgroundImg}
-      style={styles.background}
-      resizeMode="cover">
-      <View style={styles.viewDiv}>
-        <Text style={styles.heading}>Connect friends easily & quickly</Text>
-        <Text style={styles.para}>
-          Our chat app is the perfect way to stay connected with friends and
-          family.
-        </Text>
-        <View style={styles.logoDiv}>
-          <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
-            <Image source={IMAGES.GoogleImg} />
-          </TouchableOpacity>
-          <View style={styles.beforeText} />
-          <Text style={styles.orText}>OR</Text>
-          <View style={styles.afterText} />
-          <TouchableHighlight
-            style={styles.signUpBtn}
-            onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.btnTxt}>Sign up with mail</Text>
-          </TouchableHighlight>
-          <Text
-            style={styles.login}
-            onPress={() => navigation.navigate('login')}>
-            Existing account? <Text style={styles.loginLink}>Log in</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ImageBackground
+        source={IMAGES.BackgroundImg}
+        style={styles.background}
+        resizeMode="cover">
+        <View style={styles.viewDiv}>
+          <Text style={styles.heading}>Connect friends easily & quickly</Text>
+          <Text style={styles.para}>
+            Our chat app is the perfect way to stay connected with friends and
+            family.
           </Text>
+          <View style={styles.logoDiv}>
+            <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
+              <Image source={IMAGES.GoogleImg} style={styles.googleBtn} />
+            </TouchableOpacity>
+            <View style={styles.beforeText} />
+            <Text style={styles.orText}>OR</Text>
+            <View style={styles.afterText} />
+            <TouchableHighlight
+              style={styles.signUpBtn}
+              onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.btnTxt}>Sign up with mail</Text>
+            </TouchableHighlight>
+            <Text
+              style={styles.login}
+              onPress={() => navigation.navigate('login')}>
+              Existing account? <Text style={styles.loginLink}>Log in</Text>
+            </Text>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {flex: 1},
+  container: {
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+  },
   viewDiv: {
     flex: 1,
     paddingTop: 50,
@@ -67,6 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 68,
     fontWeight: '400',
     color: '#FFFFFF',
+    lineHeight: 1.2 * 68, // Adjust for readability
   },
   para: {
     fontSize: 16,
@@ -101,6 +112,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '27%',
     right: '3%',
+  },
+  googleBtn: {
+    width: 60,
+    height: 60,
   },
   signUpBtn: {
     marginTop: 39,

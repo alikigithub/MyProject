@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Platform,
 } from 'react-native';
 import IMAGES from '../../Assets/images';
 import {signUpUser} from '../redux/store/slice/authSlice';
@@ -50,104 +51,101 @@ function SignUP() {
   };
 
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
-      <KeyboardAvoidingView style={styles.loginContainer}>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View>
-            <View style={styles.chatbox}>
-              <Text style={styles.chatboxText}>Sign up with Email</Text>
-              <Text style={styles.chatboxPara}>
-                Get chatting with friends and family today by signing up for our
-                chat app!
-              </Text>
-            </View>
-
-            <View style={styles.form}>
-              <Text style={styles.label}>Your Name</Text>
-              <TextInput
-                placeholder="Enter Your Name"
-                keyboardType="default"
-                autoComplete="name"
-                style={styles.inputField}
-                value={userName}
-                onChangeText={setUserName}
-              />
-              {userNameError ? (
-                <Text style={styles.error}>{userNameError}</Text>
-              ) : null}
-
-              <Text style={styles.label}>Your Email</Text>
-              <TextInput
-                placeholder="Enter Your Email"
-                keyboardType="email-address"
-                autoComplete="email"
-                style={styles.inputField}
-                value={email}
-                onChangeText={setEmail}
-              />
-              {emailError ? (
-                <Text style={styles.error}>{emailError}</Text>
-              ) : null}
-
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                placeholder="Enter Your Password"
-                autoComplete="password"
-                keyboardType="default"
-                secureTextEntry={true}
-                style={styles.inputField}
-                value={password}
-                onChangeText={setPassword}
-              />
-              {passwordError ? (
-                <Text style={styles.error}>{passwordError}</Text>
-              ) : null}
-
-              <Text style={styles.label}>Confirm Password</Text>
-              <TextInput
-                placeholder="Confirm Password"
-                autoComplete="password"
-                keyboardType="default"
-                secureTextEntry={true}
-                style={styles.inputField}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
-              {confirmPasswordError ? (
-                <Text style={styles.error}>{confirmPasswordError}</Text>
-              ) : null}
-            </View>
-
-            <View style={styles.loginBtnView}>
-              <ImageBackground
-                style={styles.loginBg}
-                source={IMAGES.BackgroundImg}>
-                <TouchableOpacity style={styles.loginBtn} onPress={signUpData}>
-                  <Text style={styles.btnClr}>Create an account</Text>
-                </TouchableOpacity>
-              </ImageBackground>
-            </View>
+    <KeyboardAvoidingView
+      style={styles.loginContainer}
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+          <View style={styles.chatbox}>
+            <Text style={styles.chatboxText}>Sign up with Email</Text>
+            <Text style={styles.chatboxPara}>
+              Get chatting with friends and family today by signing up for our
+              chat app!
+            </Text>
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </ScrollView>
+
+          <View style={styles.form}>
+            <Text style={styles.label}>Your Name</Text>
+            <TextInput
+              placeholder="Enter Your Name"
+              keyboardType="default"
+              autoComplete="name"
+              style={styles.inputField}
+              value={userName}
+              onChangeText={setUserName}
+            />
+            {userNameError ? (
+              <Text style={styles.error}>{userNameError}</Text>
+            ) : null}
+
+            <Text style={styles.label}>Your Email</Text>
+            <TextInput
+              placeholder="Enter Your Email"
+              keyboardType="email-address"
+              autoComplete="email"
+              style={styles.inputField}
+              value={email}
+              onChangeText={setEmail}
+            />
+            {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              placeholder="Enter Your Password"
+              autoComplete="password"
+              keyboardType="default"
+              secureTextEntry={true}
+              style={styles.inputField}
+              value={password}
+              onChangeText={setPassword}
+            />
+            {passwordError ? (
+              <Text style={styles.error}>{passwordError}</Text>
+            ) : null}
+
+            <Text style={styles.label}>Confirm Password</Text>
+            <TextInput
+              placeholder="Confirm Password"
+              autoComplete="password"
+              keyboardType="default"
+              secureTextEntry={true}
+              style={styles.inputField}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            {confirmPasswordError ? (
+              <Text style={styles.error}>{confirmPasswordError}</Text>
+            ) : null}
+          </View>
+
+          <View style={styles.loginBtnView}>
+            <ImageBackground
+              style={styles.loginBg}
+              source={IMAGES.BackgroundImg}>
+              <TouchableOpacity style={styles.loginBtn} onPress={signUpData}>
+                <Text style={styles.btnClr}>Create an account</Text>
+              </TouchableOpacity>
+            </ImageBackground>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 export default SignUP;
 
 const styles = StyleSheet.create({
-  loginBtnView: {
-    height: 200,
-    justifyContent: 'flex-end',
-  },
-
   loginContainer: {
-    padding: 24,
     flex: 1,
+    padding: 24,
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
   },
   chatbox: {
-    height: 200,
+    height: '25%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -163,7 +161,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   form: {
-    marginTop: '10%',
+    marginTop: '5%',
+    flexGrow: 1,
   },
   label: {
     fontSize: 14,
@@ -174,25 +173,31 @@ const styles = StyleSheet.create({
   inputField: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(205, 209, 208, 1)',
-    paddingVertical: 5,
+    paddingVertical: 10,
+    fontSize: 16,
   },
   error: {
     color: 'red',
     fontSize: 12,
     marginTop: 2,
   },
+  loginBtnView: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   loginBg: {
     width: '100%',
     height: 48,
     borderRadius: 15,
     overflow: 'hidden',
-    marginTop: 20,
   },
   loginBtn: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
   },
   btnClr: {
     color: 'white',

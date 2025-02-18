@@ -105,6 +105,7 @@ function ChatScreen({route, navigation}: any) {
               messages={messagesData}
               index={index}
               profile={user.profile}
+              createdAt={item.createdAt}
             />
           )}
           inverted
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   chatHeaderView: {
-    width: '100%',
+    width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F3F6F6',
     elevation: 2,
+    borderWidth: 1,
   },
   backImg: {
     width: 30,

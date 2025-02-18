@@ -2,7 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Image, View, Text, StyleSheet, ScrollView} from 'react-native';
 import IMAGES from '../../Assets/images';
 import AddUserButton from './AddUserButton';
-import {contact} from '../redux/store/slice/authSlice';
+import {
+  chatUsers,
+  contact,
+  search,
+  searchUserUpdate,
+} from '../redux/store/slice/authSlice';
 import auth from '@react-native-firebase/auth';
 import {useAppDispatch} from '../cutomHooks/useRedux';
 
@@ -21,27 +26,35 @@ interface SearchListProps {
 }
 
 function SearchList({users}: SearchListProps) {
-  const [addfriend, setaddfriend] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const currentUser = auth().currentUser;
+  const [addfriend, setaddfriend] = useState<boolean>();
+  const currentUser = auth().currentUser?.uid;
   const friendList = users.item.contact;
   const secondUser = users.item.id;
-  const defaultStatus = 'be your own';
 
   useEffect(() => {
     if (friendList && currentUser) {
-      setaddfriend(friendList.includes(currentUser.uid));
+      setaddfriend(friendList.includes(currentUser));
     }
   }, [users, currentUser, friendList]);
 
-  const addFriend = () => {
+  const addFriend = async () => {
     if (currentUser && secondUser) {
-      dispatch(
-        contact({currentUserId: currentUser.uid, otherUserID: secondUser}),
-      );
-      setaddfriend(true);
+      try {
+        setaddfriend(true);
+        dispatch(searchUserUpdate(secondUser));
+        await dispatch(
+          contact({currentUserId: currentUser, otherUserID: secondUser}),
+        ).unwrap();
+        await dispatch(chatUsers()).unwrap();
+        await dispatch(search()).unwrap();
+      } catch (error) {
+        setaddfriend(false);
+      }
     }
   };
+
+  const defaultStatus = 'be your own';
 
   return (
     <ScrollView>
@@ -50,7 +63,7 @@ function SearchList({users}: SearchListProps) {
           <View style={styles.imgDiv}>
             <Image
               source={
-                users.item.profilePic.trim() !== ''
+                users.item.profilePic.trim()
                   ? {uri: users.item.profilePic}
                   : IMAGES.profileIcon
               }
@@ -60,9 +73,7 @@ function SearchList({users}: SearchListProps) {
           <View>
             <Text style={styles.heading}>{users.item.UserName}</Text>
             <Text style={styles.msg}>
-              {users.item.status.trim() !== ''
-                ? users.item.status
-                : defaultStatus}
+              {users.item.status.trim() || defaultStatus}
             </Text>
           </View>
         </View>

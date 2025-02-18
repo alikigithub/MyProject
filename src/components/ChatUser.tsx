@@ -95,6 +95,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 50,
     height: 50,
+    position: 'absolute',
+    bottom: 1,
   },
   imgStyle: {
     marginTop: 10,

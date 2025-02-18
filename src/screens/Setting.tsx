@@ -32,19 +32,23 @@ export default function Setting({navigation}: any) {
             style={styles.profilehead}
             onPress={() => navigation.navigate('Profile')}>
             <View style={styles.containerHead}>
-              <View style={styles.imgStyle}>
-                <Image
-                  source={
-                    profile?.trim() !== '' ? {uri: profile} : IMAGES.profileIcon
-                  }
-                  style={styles.profilePic}
-                />
-              </View>
-              <View>
-                <Text style={styles.userName}>{UserName}</Text>
-                <Text style={styles.statusData}>
-                  {status?.trim() !== '' ? status : 'Never give up 💪'}
-                </Text>
+              <View style={styles.centerlized}>
+                <View style={styles.imgStyle}>
+                  <Image
+                    source={
+                      profile?.trim() !== ''
+                        ? {uri: profile}
+                        : IMAGES.profileIcon
+                    }
+                    style={styles.profilePic}
+                  />
+                </View>
+                <View style={styles.datacenter}>
+                  <Text style={styles.userName}>{UserName}</Text>
+                  <Text style={styles.statusData}>
+                    {status?.trim() !== '' ? status : 'Never give up 💪'}
+                  </Text>
+                </View>
               </View>
             </View>
           </TouchableOpacity>
@@ -99,6 +103,16 @@ export default function Setting({navigation}: any) {
 }
 
 const styles = StyleSheet.create({
+  centerlized: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    width: '100%',
+    gap: 10,
+  },
+  datacenter: {
+    marginTop: 17,
+  },
+
   endBtn: {
     width: '100%',
     height: '36%',
@@ -106,7 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imgStyle: {
-    marginTop: 10,
     height: 70,
     width: 70,
     borderRadius: 50,
@@ -148,8 +161,8 @@ const styles = StyleSheet.create({
   containerHead: {
     width: '90%',
     height: '100%',
-    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 10,
   },
   profilehead: {
