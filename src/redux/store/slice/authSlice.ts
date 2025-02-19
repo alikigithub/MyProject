@@ -137,11 +137,14 @@ export const loginUser = createAsyncThunk(
         .collection('Users')
         .doc(usercredentials.user.uid)
         .get();
+      console.log(username.data()?.status);
       const user = username.exists ? username.data()?.UserName : null;
       return {
         userName: user,
         UserID: usercredentials.user.uid,
         email: usercredentials.user.email,
+        Status: username.data()?.status,
+        ProfilePic: username.data()?.profilePic,
       };
     } catch (error: any) {
       if (error.code === 'auth/invalid-credential') {
@@ -496,6 +499,8 @@ const authSlice = createSlice({
         state.userid = action.payload?.UserID || '';
         state.username = action.payload?.userName;
         state.email = action.payload?.email || '';
+        state.status = action.payload?.Status;
+        state.profilePic = action.payload?.ProfilePic;
       })
       .addCase(search.pending, state => {
         state.loading = true;
@@ -547,6 +552,7 @@ const authSlice = createSlice({
         state.username = action.payload?.UserName || '';
         state.email = action.payload?.Email || '';
         state.profilePic = action.payload?.profilePic || '';
+        state.status = action.payload?.Status;
       })
       .addCase(getHomeUsers.pending, state => {
         state.getHomeUsersloader = true;

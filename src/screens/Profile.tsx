@@ -37,7 +37,6 @@ export default function Profile({navigation}: any) {
   const [userNameData, setUserName] = useState<string>('');
   const [statusData, setStatusData] = useState<string>('');
   const [profile, setprofile] = useState<string>('');
-  const [loading, setloading] = useState<boolean>(false);
   const currentID: string = auth().currentUser?.uid || '';
   const dispatch = useAppDispatch();
 
@@ -73,8 +72,6 @@ export default function Profile({navigation}: any) {
 
   const UpdateProfile = async () => {
     try {
-      setloading(true);
-
       await dispatch(sendprofilePic({userId: currentID, ProfileUrl: profile}));
 
       if (statusData?.trim() !== '') {
@@ -93,7 +90,6 @@ export default function Profile({navigation}: any) {
     } catch (error) {
       Alert.alert('Complete the Update Process');
     } finally {
-      setloading(false);
     }
   };
 

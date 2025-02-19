@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F3F6F6',
     elevation: 2,
-    borderWidth: 1,
   },
   backImg: {
     width: 30,
