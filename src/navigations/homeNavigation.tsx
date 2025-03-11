@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Contact from '../screens/Contact';
-import Home from '../screens/Home';
+import Contact from '../screens/Contact/Contact';
+import Home from '../screens/Home/Home';
 import SettingNavigation from './settingNavigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Import Vector Icons
 
@@ -32,7 +32,7 @@ export default function HomeNavigation() {
         options={{
           title: 'Messages',
           headerShown: false,
-          tabBarIcon: HomeIcon, // Pass function reference, not inline function
+          tabBarIcon: HomeIcon,
         }}
       />
       <Tab.Screen
