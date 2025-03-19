@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text, TextInput, View} from 'react-native';
-import Loader from '../../components/Loader/Loader';
+import Loader from '../../components/loader/loader';
 import {ScrollView} from 'react-native-gesture-handler';
-import ButtonTem from '../../components/ButtonTem/ButtonTem';
+import ButtonTem from '../../components/buttonTem/buttonTem';
 import {styles} from './ForgetPasswordStyle';
 import useForgetPassword from '../../cutomHooks/useForgetPassword';
 function ForgetPassword() {

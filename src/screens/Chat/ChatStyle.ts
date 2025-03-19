@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 
 StyleSheet;
 export const styles = StyleSheet.create({
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
   inputField: {
     height: 50,
     width: '80%',
-    backgroundColor: '#F3F6F6',
+    backgroundColor: `${COLOR.off_white}`,
     borderRadius: 10,
     paddingLeft: 10,
   },
@@ -49,7 +50,7 @@ export const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F3F6F6',
+    backgroundColor: `${COLOR.off_white}`,
     elevation: 2,
   },
   backImg: {
@@ -59,6 +60,6 @@ export const styles = StyleSheet.create({
   chatView: {
     flex: 1,
     width: '100%',
-    backgroundColor: '#F3F6F6',
+    backgroundColor: `${COLOR.off_white}`,
   },
 });

@@ -1,19 +1,20 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   addUserButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1877F2',
+    backgroundColor: `${COLOR.facebook_blue}`,
     paddingHorizontal: 20,
     borderRadius: 25,
-    shadowColor: '#000',
+    shadowColor: `${COLOR.black}`,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
   },
   text: {
-    color: '#fff',
+    color: `${COLOR.white}`,
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 10,
@@ -21,7 +22,7 @@ export const styles = StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
-    tintColor: '#fff',
+    tintColor: `${COLOR.white}`,
   },
   sendButtonContainer: {
     flexDirection: 'row',
@@ -46,7 +47,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnClr: {
-    color: 'rgba(255, 255, 255, 1)',
+    color: `${COLOR.white_rgba}`,
     fontSize: 16,
   },
 });

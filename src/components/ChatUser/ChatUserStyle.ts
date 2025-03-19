@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   parentView: {
     height: '100%',
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: `${COLOR.black}`,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

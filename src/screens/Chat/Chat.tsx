@@ -8,8 +8,8 @@ import {
   FlatList,
 } from 'react-native';
 import {styles} from './ChatStyle';
-import Button from '../../components/ButtonTem/ButtonTem';
-import ChatsData from '../../components/ChatsData/ChatsData';
+import Button from '../../components/buttonTem/buttonTem';
+import ChatsData from '../../components/chatsData/chatsData';
 import useChat from '../../cutomHooks/useChat';
 import IMAGES from '../../../Assets/images';
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Image, View, Text, ScrollView} from 'react-native';
 import IMAGES from '../../../Assets/images';
-import Button from '../ButtonTem/ButtonTem';
+import Button from '../buttonTem/buttonTem';
 import {contact, search, searchUserUpdate} from '../../redux/slice/userSlice';
 import {chatUsers} from '../../redux/slice/chatSlice';
 import auth from '@react-native-firebase/auth';

@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
+import {COLOR} from '../../constant/color';
 const {width, height} = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   formLables: {
-    color: '#3D4A7A',
+    color: `${COLOR.navy_blue}`,
     fontSize: 16,
   },
   input: {
@@ -43,7 +44,7 @@ export const styles = StyleSheet.create({
     width: '90%',
     height: 65,
     borderBottomWidth: 1,
-    borderBottomColor: '#CDD1D0',
+    borderBottomColor: `${COLOR.silver_gray}`,
     justifyContent: 'center',
   },
   form: {

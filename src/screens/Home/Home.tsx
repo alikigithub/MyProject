@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native';
 import IMAGES from '../../../Assets/images';
-import ChatUsers from '../../components/ChatUser/ChatUser';
+import ChatUsers from '../../components/chatUser/chatUser';
 import {Text} from '@react-navigation/elements';
-import SmallLoader from '../../components/SmallLoader/SmallLoader';
+import SmallLoader from '../../components/smallLoader/smallLoader';
 import {styles} from './HomeStyle';
 import useHome from '../../cutomHooks/useHome';
 
@@ -18,7 +18,7 @@ export default function Home({navigation}: any) {
 
   return (
     <ImageBackground
-      source={IMAGES.BackgroundImg}
+      source={IMAGES.backgroundImg}
       style={styles.background}
       resizeMode="cover">
       <View style={styles.parentView}>

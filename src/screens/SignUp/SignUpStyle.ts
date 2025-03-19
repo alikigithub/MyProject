@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
@@ -15,11 +16,11 @@ export const styles = StyleSheet.create({
   chatboxText: {
     fontSize: 28,
     fontWeight: '700',
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
   },
   chatboxPara: {
     fontSize: 18,
-    color: 'rgba(121, 124, 123, 1)',
+    color: `${COLOR.rgba_dark_gray}`,
     textAlign: 'center',
     paddingTop: 15,
   },
@@ -30,12 +31,12 @@ export const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
     marginTop: 10,
   },
   inputField: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(205, 209, 208, 1)',
+    borderBottomColor: `${COLOR.rgba_silver_gray}`,
     paddingVertical: 10,
     fontSize: 16,
   },

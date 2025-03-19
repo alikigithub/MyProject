@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   profiledefault: {height: 60, width: 60},
   imgStyle: {
@@ -54,7 +55,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   iconContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: `${COLOR.rgba_white_20}`,
     height: 44,
     width: 44,
     borderRadius: 22,

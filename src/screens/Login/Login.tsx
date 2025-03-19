@@ -12,17 +12,10 @@ import IMAGES from '../../../Assets/images';
 import {loginUser, signInWithGoogle} from '../../redux/slice/userSlice';
 import useLoginValidation from '../../cutomHooks/useLoginValidation';
 import {ScrollView} from 'react-native-gesture-handler';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useAppDispatch, useAppSelector} from '../../cutomHooks/useRedux';
 import {styles} from './LoginStyle';
-type RootStackParamList = {
-  Login: undefined;
-  forget: undefined;
-};
 
-type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
-
-function Login({navigation}: LoginProps) {
+function Login({navigation}: any) {
   const {
     email,
     setemail,
@@ -36,9 +29,11 @@ function Login({navigation}: LoginProps) {
   const loginBtn = () => {
     if (validinput()) {
       dispatch(loginUser({email, password}));
+    } else {
+      Alert.alert('sorry');
     }
   };
-  const loginerror = useAppSelector(state => state.authSlice.loginError);
+  const loginerror = useAppSelector(state => state.userSlice.loginError);
   if (loginerror.trim() !== '') {
     Alert.alert('Email Does not Exists');
   }
@@ -91,7 +86,7 @@ function Login({navigation}: LoginProps) {
           ) : null}
         </View>
         <View style={styles.loginBgParent}>
-          <ImageBackground style={styles.loginBg} source={IMAGES.BackgroundImg}>
+          <ImageBackground style={styles.loginBg} source={IMAGES.backgroundImg}>
             <TouchableOpacity style={styles.loginBtn} onPress={loginBtn}>
               <Text style={styles.btnClr}>Login</Text>
             </TouchableOpacity>

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   centerlized: {
     flexDirection: 'row',
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   },
 
   iconText2: {
-    color: '#797C7B63',
+    color: `${COLOR.transparent_gray}`,
   },
   iconText: {
     fontSize: 16,
@@ -50,7 +51,7 @@ export const styles = StyleSheet.create({
   divColor: {
     width: 44,
     height: 44,
-    backgroundColor: '#DEEBFF',
+    backgroundColor: `${COLOR.light_sky_blue}`,
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,10 +69,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: '#F5F6F6',
+    borderBottomColor: `${COLOR.soft_white}`,
   },
   statusData: {
-    color: '#797C7B',
+    color: `${COLOR.gray}`,
     fontSize: 15,
   },
   userName: {fontSize: 20, fontWeight: 500},

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   chatContainer: {
     width: '100%',
@@ -30,10 +31,10 @@ export const styles = StyleSheet.create({
   userName: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#3D4A7A',
+    color: `${COLOR.navy_blue}`,
   },
   sendDiv: {
-    backgroundColor: '#3D4A7A',
+    backgroundColor: `${COLOR.navy_blue}`,
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 10,
@@ -41,7 +42,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   receiveDiv: {
-    backgroundColor: '#F2F7FB',
+    backgroundColor: `${COLOR.light_blue}`,
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 10,
@@ -50,15 +51,15 @@ export const styles = StyleSheet.create({
   },
   SendText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: `${COLOR.white}`,
   },
   ReceiveText: {
     fontSize: 16,
-    color: '#000000',
+    color: `${COLOR.black}`,
   },
   timeText: {
     fontSize: 12,
-    color: '#666',
+    color: `${COLOR.dark_gray}`,
     marginTop: 3,
   },
 });

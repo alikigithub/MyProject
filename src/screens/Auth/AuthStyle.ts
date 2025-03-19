@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 
 export const styles = StyleSheet.create({
   container: {
@@ -16,13 +17,13 @@ export const styles = StyleSheet.create({
   heading: {
     fontSize: 68,
     fontWeight: '400',
-    color: '#FFFFFF',
+    color: `${COLOR.white}`,
     lineHeight: 1.2 * 68, // Adjust for readability
   },
   para: {
     fontSize: 16,
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: `${COLOR.rgba_white_50}`,
     marginTop: 39,
   },
   logoDiv: {
@@ -33,14 +34,14 @@ export const styles = StyleSheet.create({
   },
   orText: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: `${COLOR.white}`,
     fontWeight: '900',
     marginTop: 30,
   },
   beforeText: {
     width: 122,
     height: 1,
-    backgroundColor: 'rgba(241, 232, 232, 0.16)',
+    backgroundColor: `${COLOR.rgba_light_pink_16}`,
     position: 'absolute',
     top: '27%',
     left: '3%',
@@ -48,7 +49,7 @@ export const styles = StyleSheet.create({
   afterText: {
     width: 122,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    backgroundColor: `${COLOR.rgba_light_pink_16}`,
     position: 'absolute',
     top: '27%',
     right: '3%',
@@ -61,20 +62,20 @@ export const styles = StyleSheet.create({
     marginTop: 39,
     width: 327,
     height: 48,
-    backgroundColor: 'rgba(255, 255, 255, 0.37)',
+    backgroundColor: `${COLOR.rgba_white_37}`,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
   btnTxt: {
-    color: 'rgba(255, 255, 255, 1)',
+    color: `${COLOR.white_rgba}`,
     fontSize: 16,
   },
   login: {
     marginTop: 39,
     fontSize: 14,
     fontWeight: '400',
-    color: 'rgba(255, 255, 255, 1)',
+    color: `${COLOR.white_rgba}`,
   },
   loginLink: {
     fontSize: 16,

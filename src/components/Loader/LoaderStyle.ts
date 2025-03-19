@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -9,16 +10,16 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: `${COLOR.rgba_white_90}`,
     zIndex: 1000,
   },
   loaderBox: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: `${COLOR.white}`,
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: `${COLOR.black}`,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#3498db',
+    color: `${COLOR.navy_blue}`,
     fontWeight: 'bold',
   },
 });

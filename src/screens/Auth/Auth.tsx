@@ -27,7 +27,7 @@ function AuthScreen({navigation}: AuthScreenProps) {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ImageBackground
-        source={IMAGES.BackgroundImg}
+        source={IMAGES.backgroundImg}
         style={styles.background}
         resizeMode="cover">
         <View style={styles.viewDiv}>
@@ -38,7 +38,7 @@ function AuthScreen({navigation}: AuthScreenProps) {
           </Text>
           <View style={styles.logoDiv}>
             <TouchableOpacity onPress={() => dispatch(signInWithGoogle())}>
-              <Image source={IMAGES.GoogleImg} style={styles.googleBtn} />
+              <Image source={IMAGES.googleImg} style={styles.googleBtn} />
             </TouchableOpacity>
             <View style={styles.beforeText} />
             <Text style={styles.orText}>OR</Text>

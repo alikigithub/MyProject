@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   friend: {
     color: 'green',
@@ -39,6 +40,6 @@ export const styles = StyleSheet.create({
   },
   msg: {
     fontSize: 12,
-    color: 'rgba(121, 124, 123, 0.39)',
+    color: `${COLOR.gray_rgba_39}`,
   },
 });

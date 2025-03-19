@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, TouchableOpacity, View} from 'react-native';
 import IMAGES from '../../../Assets/images';
-import {styles} from './CustomHeaderStyle';
+import {styles} from './customHeaderStyle';
 import {NavigationProp} from '@react-navigation/native';
 
 function CustomHeader({navigation}: {navigation: NavigationProp<any>}) {

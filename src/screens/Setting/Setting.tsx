@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import ButtonTem from '../../components/ButtonTem/ButtonTem';
+import ButtonTem from '../../components/buttonTem/buttonTem';
 import {styles} from './SettingStyle';
 import useSetting from '../../cutomHooks/useSetting';
 export default function Setting({navigation}: any) {
@@ -15,7 +15,7 @@ export default function Setting({navigation}: any) {
 
   return (
     <ImageBackground
-      source={IMAGES.BackgroundImg}
+      source={IMAGES.backgroundImg}
       style={styles.background}
       resizeMode="cover">
       <View style={styles.parentView}>

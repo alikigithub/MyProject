@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import IMAGES from '../../../Assets/images';
-import ButtonTem from '../../components/ButtonTem/ButtonTem';
+import ButtonTem from '../../components/buttonTem/buttonTem';
 import {styles} from './ProfileStyle';
 import useProfile from '../../cutomHooks/useProfile';
 export default function Profile({navigation}: any) {
@@ -28,7 +28,7 @@ export default function Profile({navigation}: any) {
 
   return (
     <ImageBackground
-      source={IMAGES.BackgroundImg}
+      source={IMAGES.backgroundImg}
       style={styles.background}
       resizeMode="cover">
       <KeyboardAvoidingView

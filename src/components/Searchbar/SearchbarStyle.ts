@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   searchplp: {
     fontSize: 16,
@@ -19,7 +20,7 @@ export const styles = StyleSheet.create({
   searchDiv: {
     width: '100%',
     height: 50,
-    backgroundColor: 'rgb(232, 238, 238)',
+    backgroundColor: `${COLOR.light_gray}`,
     borderRadius: 15,
     position: 'relative',
     paddingHorizontal: 32,

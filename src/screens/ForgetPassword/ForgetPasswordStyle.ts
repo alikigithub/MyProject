@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
+import {COLOR} from '../../constant/color';
 const {height} = Dimensions.get('window');
 const adjheight = height - 30;
 
@@ -19,7 +20,7 @@ export const styles = StyleSheet.create({
     bottom: '2%',
   },
   forgetTx: {
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
     fontWeight: '500',
   },
   loginBg: {
@@ -37,7 +38,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnClr: {
-    color: 'rgba(255, 255, 255, 1)',
+    color: `${COLOR.white_rgba}`,
     fontSize: 16,
   },
   form: {
@@ -46,24 +47,24 @@ export const styles = StyleSheet.create({
   },
   inputField: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(205, 209, 208, 1)',
+    borderBottomColor: `${COLOR.rgba_silver_gray}`,
   },
   inputLable: {
     fontSize: 14,
     fontWeight: 500,
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
   },
   lablemail: {
     marginBottom: 10,
     fontSize: 14,
     fontWeight: 500,
-    color: '    rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
   },
   lablePass: {
     marginTop: 25,
     fontSize: 14,
     fontWeight: 500,
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
   },
 
   chatbox: {
@@ -74,14 +75,14 @@ export const styles = StyleSheet.create({
   },
   chatboxPara: {
     fontSize: 18,
-    color: 'rgba(121, 124, 123, 1)',
+    color: `${COLOR.rgba_dark_gray}`,
     textAlign: 'center',
     marginTop: 15,
   },
   chatboxText: {
     fontSize: 28,
     fontWeight: 700,
-    color: 'rgba(61, 74, 122, 1)',
+    color: `${COLOR.rgba_navy_blue}`,
   },
   loginContainer: {
     position: 'relative',

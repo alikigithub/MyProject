@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
+import {COLOR} from '../../constant/color';
 const {height} = Dimensions.get('window');
 const adjheight = height - 50;
 export const styles = StyleSheet.create({
@@ -10,14 +11,14 @@ export const styles = StyleSheet.create({
     marginBottom: 60,
   },
   formLabel: {
-    color: '#3D4A7A',
+    color: `${COLOR.navy_blue}`,
     fontSize: 16,
   },
   formField: {
     marginBottom: 20,
     width: '100%',
     borderBottomWidth: 1,
-    borderBottomColor: '#CDD1D0',
+    borderBottomColor: `${COLOR.silver_gray}`,
     justifyContent: 'center',
   },
   input: {

@@ -121,7 +121,7 @@ function SignUP() {
           <View style={styles.loginBtnView}>
             <ImageBackground
               style={styles.loginBg}
-              source={IMAGES.BackgroundImg}>
+              source={IMAGES.backgroundImg}>
               <TouchableOpacity style={styles.loginBtn} onPress={signUpData}>
                 <Text style={styles.btnClr}>Create an account</Text>
               </TouchableOpacity>

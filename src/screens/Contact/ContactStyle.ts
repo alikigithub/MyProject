@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLOR} from '../../constant/color';
 export const styles = StyleSheet.create({
   parentView: {
     flex: 1,
@@ -42,6 +43,6 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 10,
-    color: '#003366',
+    color: `${COLOR.dark_blue}`,
   },
 });

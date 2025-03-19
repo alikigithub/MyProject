@@ -5,12 +5,12 @@ import styles from './SplashStyle';
 function Splash() {
   return (
     <ImageBackground
-      source={IMAGES.BackgroundImg}
+      source={IMAGES.backgroundImg}
       style={styles.background}
       resizeMode="cover">
       <View style={styles.container}>
         <Text style={styles.textpro}> Techhat</Text>
-        <Image source={IMAGES.LogoImg} />
+        <Image source={IMAGES.logoImg} />
       </View>
     </ImageBackground>
   );

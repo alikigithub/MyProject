@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import {styles} from './ChangePasswordStyle';
 import IMAGES from '../../../Assets/images';
-import Loader from '../../components/Loader/Loader';
-import ButtonTem from '../../components/ButtonTem/ButtonTem';
+import Loader from '../../components/loader/loader';
+import ButtonTem from '../../components/buttonTem/buttonTem';
 import useChangePassword from '../../cutomHooks/useChangePassword';
 export default function ChangePassword({navigation}: any) {
   const {
@@ -28,7 +28,7 @@ export default function ChangePassword({navigation}: any) {
   return (
     <ScrollView>
       <ImageBackground
-        source={IMAGES.BackgroundImg}
+        source={IMAGES.backgroundImg}
         style={styles.background}
         resizeMode="cover">
         <View style={styles.parentView}>

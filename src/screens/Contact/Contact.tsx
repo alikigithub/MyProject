@@ -1,8 +1,8 @@
 import React from 'react';
 import {FlatList, ImageBackground, Text, View} from 'react-native';
 import IMAGES from '../../../Assets/images';
-import ChatUsersContacts from '../../components/ChatUsersContact/ChatUsersContact';
-import SmallLoader from '../../components/SmallLoader/SmallLoader';
+import ChatUsersContacts from '../../components/chatUsersContact/chatUsersContact';
+import SmallLoader from '../../components/smallLoader/smallLoader';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {styles} from './ContactStyle';
 import useContacts from '../../cutomHooks/useContact';
@@ -18,7 +18,7 @@ export default function Contact({navigation}: ContactProps) {
   const {groupedUsers, sections, contactLoader} = useContacts();
   return (
     <ImageBackground
-      source={IMAGES.BackgroundImg}
+      source={IMAGES.backgroundImg}
       style={styles.background}
       resizeMode="cover">
       <View style={styles.parentView}>
