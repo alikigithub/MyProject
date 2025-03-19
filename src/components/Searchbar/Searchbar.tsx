@@ -2,10 +2,10 @@ import React, {useState, useLayoutEffect} from 'react';
 import {FlatList, Image, TextInput, View} from 'react-native';
 import IMAGES from '../../../Assets/images';
 import {Text} from '@react-navigation/elements';
-import SearchList from '../SearchList/SearchList';
+import SearchList from '../searchList/searchList';
 import {useAppSelector} from '../../cutomHooks/useRedux';
 import {UserData} from '../../types/type';
-import {styles} from './SearchbarStyle';
+import {styles} from './searchbarStyle';
 import {NavigationProp} from '@react-navigation/native';
 
 type RootStackParamList = {

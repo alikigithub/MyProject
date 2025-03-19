@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Image} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {ChatsDatatype} from '../../types/type';
-import {styles} from './ChatsDataStyle';
+import {styles} from './chatsDataStyle';
 import {Timestamp} from '@react-native-firebase/firestore';
 function ChatsData({
   items,

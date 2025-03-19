@@ -6,7 +6,7 @@ import {contact, search, searchUserUpdate} from '../../redux/slice/userSlice';
 import {chatUsers} from '../../redux/slice/chatSlice';
 import auth from '@react-native-firebase/auth';
 import {useAppDispatch} from '../../cutomHooks/useRedux';
-import {styles} from './SearchListStyle';
+import {styles} from './searchListStyle';
 interface User {
   item: {
     contact: string[];

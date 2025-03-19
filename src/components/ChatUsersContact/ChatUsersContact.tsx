@@ -6,8 +6,7 @@ import {chatuser, ChatUsersContactsProps} from '../../types/type';
 import auth from '@react-native-firebase/auth';
 import {homeUsers} from '../../redux/slice/chatSlice';
 import {useAppDispatch} from '../../cutomHooks/useRedux';
-import {styles} from './ChatUsersContactStyle';
-
+import {styles} from './chatUsersContactStyle';
 export default function ChatUsersContacts({
   items,
   navigation,

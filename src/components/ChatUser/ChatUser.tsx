@@ -9,7 +9,7 @@ import {updateContactList} from '../../redux/slice/chatSlice';
 import {Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useAppDispatch} from '../../cutomHooks/useRedux';
-import {styles} from './ChatUserStyle';
+import {styles} from './chatUserStyle';
 export default function ChatUsers({items, navigation}: any) {
   const dispatch = useAppDispatch();
 
