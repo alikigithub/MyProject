@@ -6,7 +6,7 @@ const IMAGES = {
   logoGoogle: require('../images/logoCricle.png'),
   searchIcon: require('../images/searchIcon.png'),
   profileIcon: require('../images/profile.png'),
-  searchIconBlk: require('../images/Vectorsearch.png'),
+  searchIconBlk: require('../images/vectorsearch.png'),
   backtickWhite: require('../images/whiteArrow.png'),
   help: require('../images/helpSign.png'),
   notification: require('../images/notifications.png'),
